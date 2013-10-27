@@ -7,8 +7,12 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
+        android:name="in.amolgupta.helpingfaceless.common.App"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -22,8 +26,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="in.amolgupta.helpingfaceless.activities.UpoadForm" 
-            android:label="@string/lbl_upload_activity">
+        <activity
+            android:name="in.amolgupta.helpingfaceless.activities.UpoadForm"
+            android:label="@string/lbl_upload_activity" >
+        </activity>
+        <activity
+            android:name="in.amolgupta.helpingfaceless.SetupActivity"
+            android:label="@string/title_activity_setup"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
     </application>
 
