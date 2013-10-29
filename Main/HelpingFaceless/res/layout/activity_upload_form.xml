@@ -8,6 +8,7 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="48dp"
+        android:id="@+id/btn_upload_to_server"
         android:background="#6666FF"
         android:text="@string/lbl_btn_upload"
         android:textColor="#FFFFFF" />
