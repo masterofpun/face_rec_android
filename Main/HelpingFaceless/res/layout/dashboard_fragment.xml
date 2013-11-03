@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eedddddd"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/btn_upload"
+        android:layout_width="fill_parent"
+        android:background="#6666FF"
+        android:textColor="#FFFFFF"
+        android:layout_height="48dp"
+        android:text="@string/lbl_dash_new" />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#000000"
+            android:orientation="horizontal"
+            android:weightSum="1" >
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight=".5"
+                android:scaleType="fitXY"
+                android:src="@drawable/face_recognition" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight=".5"
+                android:scaleType="fitXY"
+                android:src="@drawable/aishwarya_rai_face" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="90dp"
+            android:layout_gravity="bottom"
+            android:background="#eedddddd"
+            android:gravity="bottom"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingTop="10dp"
+                android:text="@string/lbl_dash_question" >
+            </TextView>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal" >
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight=".3"
+                    android:adjustViewBounds="true"
+                    android:background="#00000000"
+                    android:src="@drawable/btn_yes" />
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight=".3"
+                    android:adjustViewBounds="true"
+                    android:background="#00000000"
+                    android:src="@drawable/btn_no" />
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight=".3"
+                    android:adjustViewBounds="true"
+                    android:background="#00000000"
+                    android:src="@drawable/btn_next" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>

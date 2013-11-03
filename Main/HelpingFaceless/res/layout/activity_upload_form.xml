@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:orientation="vertical" >
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:id="@+id/btn_upload_to_server"
+        android:background="#6666FF"
+        android:text="@string/lbl_btn_upload"
+        android:textColor="#FFFFFF" />
+
+    <ImageView
+        android:id="@+id/img_upload_form"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent" >
+    </ImageView>
+
+</LinearLayout>
