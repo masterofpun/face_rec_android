@@ -8,6 +8,7 @@
     <string name="lbl_dash_new">Upload New Picture</string>
     <string name="lbl_dash_question">Are these picture of the same person?</string>
     <string name="lbl_upload_activity">Upload</string>
-    <string name="lbl_btn_upload">Upload</string>
+    <string name="lbl_btn_upload">UPLOAD</string>
+    <string name="lbl_try_again">TRY AGAIN</string>
 
 </resources>
