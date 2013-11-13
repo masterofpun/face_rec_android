@@ -9,24 +9,20 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.regex.Pattern;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -93,17 +89,17 @@ public class SetupActivity extends Activity {
 						return false;
 					}
 				});
-		Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-		Account[] accounts = AccountManager.get(this).getAccounts();
-		for (Account account : accounts) {
-			if (emailPattern.matcher(account.name).matches()) {
-				mEmailView.setText(account.name);
-				break;
-			}
-		}
-		TelephonyManager tMgr = (TelephonyManager) this
-				.getSystemService(Context.TELEPHONY_SERVICE);
-		mPasswordView.setText(tMgr.getLine1Number());
+		// Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+		// Account[] accounts = AccountManager.get(this).getAccounts();
+		// for (Account account : accounts) {
+		// if (emailPattern.matcher(account.name).matches()) {
+		// mEmailView.setText(account.name);
+		// break;
+		// }
+		// }
+		// TelephonyManager tMgr = (TelephonyManager) this
+		// .getSystemService(Context.TELEPHONY_SERVICE);
+		// mPasswordView.setText(tMgr.getLine1Number());
 		mLoginFormView = findViewById(R.id.login_form);
 		mLoginStatusView = findViewById(R.id.login_status);
 		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
@@ -293,6 +289,17 @@ public class SetupActivity extends Activity {
 			showProgress(false);
 
 			if (success) {
+				SharedPreferences pref = getApplicationContext()
+						.getSharedPreferences("MyPref", 0); // 0 - for private
+															// mode
+				Editor editor = pref.edit();
+				
+				editor.putString("session", "string value"); // Storing string
+				editor.putBoolean("isLoggedIn", true); // Storing string
+				 
+				editor.commit(); // commit changes
+				
+
 				Constants.mIsLoggedIN = true;
 				Intent mDashBoardIntent = new Intent(SetupActivity.this,
 						HomeActivity.class);

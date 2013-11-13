@@ -141,9 +141,9 @@ public class UpoadForm extends Activity implements OnClickListener {
 			mBuilder.setContentTitle("Upload")
 					.setContentText("Upload in progress")
 					.setSmallIcon(R.drawable.ic_launcher);
-			 mBuilder.setProgress(0, 0, true);
-             // Displays the progress bar for the first time.
-             mNotifyManager.notify(1, mBuilder.build());
+			mBuilder.setProgress(0, 0, true);
+			// Displays the progress bar for the first time.
+			mNotifyManager.notify(1, mBuilder.build());
 
 		}
 
