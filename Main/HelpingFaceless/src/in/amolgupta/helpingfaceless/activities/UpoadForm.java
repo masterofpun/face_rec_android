@@ -1,6 +1,7 @@
 package in.amolgupta.helpingfaceless.activities;
 
 import in.amolgupta.helpingfaceless.R;
+import in.amolgupta.helpingfaceless.common.Constants;
 
 import java.io.File;
 import java.io.IOException;
@@ -160,8 +161,7 @@ public class UpoadForm extends Activity implements OnClickListener {
 
 			try {
 
-				HttpPost httppost = new HttpPost(
-						"http://helpingfaceless.com/api/v1/information/upload");
+				HttpPost httppost = new HttpPost(Constants.mUploadURL);
 				// httppost.setHeader("Content-Type",
 				// "application/x-www-form-urlencoded");
 				httppost.setHeader("Content-Type", "application/octet-stream");

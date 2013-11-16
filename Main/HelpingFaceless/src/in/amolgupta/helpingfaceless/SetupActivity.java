@@ -2,6 +2,7 @@ package in.amolgupta.helpingfaceless;
 
 import in.amolgupta.helpingfaceless.activities.HomeActivity;
 import in.amolgupta.helpingfaceless.common.Constants;
+import in.amolgupta.helpingfaceless.utils.RequestUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -225,33 +226,12 @@ public class SetupActivity extends Activity {
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		OkHttpClient client = new OkHttpClient();
 
-		byte[] readFully(InputStream in) throws IOException {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			byte[] buffer = new byte[1024];
-			for (int count; (count = in.read(buffer)) != -1;) {
-				out.write(buffer, 0, count);
-			}
-			return out.toByteArray();
-		}
 
-		String get(URL url) throws IOException {
-			HttpURLConnection connection = client.open(url);
-			InputStream in = null;
-			try {
-				// Read the response.
-				in = connection.getInputStream();
-				byte[] response = readFully(in);
-				return new String(response, "UTF-8");
-			} finally {
-				if (in != null)
-					in.close();
-			}
-		}
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			try {
-				String result = get(new URL(Uri
+				String result = RequestUtils.get(new URL(Uri
 						.parse(Constants.mAuthUrl)
 						.buildUpon()
 						.appendQueryParameter("phone_number",
@@ -259,7 +239,7 @@ public class SetupActivity extends Activity {
 						.appendQueryParameter("email",
 								mEmailView.getText().toString()).build()
 						.toString()
-						+ "%0A"));
+						+ "%0A"), client);
 				Log.d("HF_API", result);
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block

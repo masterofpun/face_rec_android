@@ -1,18 +1,15 @@
 package in.amolgupta.helpingfaceless.services;
 
 import in.amolgupta.helpingfaceless.common.Constants;
-import in.amolgupta.helpingfaceless.parser.CrowsourceDataParser;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
-import org.json.JSONException;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -31,29 +28,6 @@ public class SendCSResponse extends AsyncTask<Void, Void, Boolean> {
 
 	}
 
-	byte[] readFully(InputStream in) throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		byte[] buffer = new byte[1024];
-		for (int count; (count = in.read(buffer)) != -1;) {
-			out.write(buffer, 0, count);
-		}
-		return out.toByteArray();
-	}
-
-	String get(URL url) throws IOException {
-		HttpURLConnection connection = client.open(url);
-		InputStream in = null;
-		try {
-			// Read the response.
-			in = connection.getInputStream();
-			byte[] response = readFully(in);
-			return new String(response, "UTF-8");
-		} finally {
-			if (in != null)
-				in.close();
-		}
-	}
-
 	String createRequestJSON() {
 		String input = new String();
 		JsonObject inputTaskObject = new JsonObject();
@@ -62,23 +36,23 @@ public class SendCSResponse extends AsyncTask<Void, Void, Boolean> {
 		inputUserObject.addProperty("selected", feedback);
 
 		JsonObject inputObject = new JsonObject();
-		inputObject.addProperty("access_token", "some_token");
+		inputObject.addProperty("access_token", "e2ad9723-b938-457b-8377-6e42f01f6697");
 		inputObject.addProperty("task", inputTaskObject.toString());
 		inputObject.addProperty("user", inputUserObject.toString());
+		Log.d("HF_API",inputObject.toString());
 		return inputObject.toString();
-
 	}
 
 	@Override
 	protected Boolean doInBackground(Void... params) {
 		try {
-			String result = get(new URL(Uri.parse(Constants.mFeedBackURL)
-					.buildUpon().toString()));
-			Log.d("HF_API", result);
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(Constants.mFeedBackURL);
+			httppost.setEntity(new StringEntity(createRequestJSON()));
+			httppost.setHeader("Accept", "application/json");
+			httppost.setHeader("Content-type", "application/json");
+			HttpResponse response = httpclient.execute(httppost);
+			Log.d("HF_API", response.getStatusLine().toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

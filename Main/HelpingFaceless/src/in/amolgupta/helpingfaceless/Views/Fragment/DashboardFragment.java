@@ -7,11 +7,9 @@ import in.amolgupta.helpingfaceless.entities.ImageData;
 import in.amolgupta.helpingfaceless.entities.TaskDetails;
 import in.amolgupta.helpingfaceless.parser.CrowsourceDataParser;
 import in.amolgupta.helpingfaceless.services.SendCSResponse;
+import in.amolgupta.helpingfaceless.utils.RequestUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,6 +33,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.facebook.rebound.SimpleSpringListener;
+import com.facebook.rebound.Spring;
+import com.facebook.rebound.SpringSystem;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
@@ -65,6 +66,29 @@ public class DashboardFragment extends Fragment implements
 		mBtnNegitive.setOnClickListener(this);
 		mBtnPositive.setOnClickListener(this);
 		mBtnSkip.setOnClickListener(this);
+
+		SpringSystem springSystem = SpringSystem.create();
+
+		// Add a spring to the system.
+		Spring spring = springSystem.createSpring();
+
+		// Add a listener to observe the motion of the spring.
+		spring.addListener(new SimpleSpringListener() {
+
+			@Override
+			public void onSpringUpdate(Spring spring) {
+				// You can observe the updates in the spring
+				// state by asking its current value in onSpringUpdate.
+				float value = (float) spring.getCurrentValue();
+				float scale = 1f - (value * 0.5f);
+//				mImageOne.setScaleX(scale);
+//				mImageOne.setScaleY(scale);
+			}
+
+		});
+
+		// Set the spring in motion; moving from 0 to 1
+		spring.setEndValue(1);
 	}
 
 	@Override
@@ -110,35 +134,12 @@ public class DashboardFragment extends Fragment implements
 		OkHttpClient client = new OkHttpClient();
 		private ArrayList<ImageData> images;
 
-		byte[] readFully(InputStream in) throws IOException {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			byte[] buffer = new byte[1024];
-			for (int count; (count = in.read(buffer)) != -1;) {
-				out.write(buffer, 0, count);
-			}
-			return out.toByteArray();
-		}
-
-		String get(URL url) throws IOException {
-			HttpURLConnection connection = client.open(url);
-			InputStream in = null;
-			try {
-				// Read the response.
-				in = connection.getInputStream();
-				byte[] response = readFully(in);
-				return new String(response, "UTF-8");
-			} finally {
-				if (in != null)
-					in.close();
-			}
-		}
-
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			try {
-				String result = get(new URL(Uri
-						.parse(Constants.mRandomImagesURL).buildUpon()
-						.toString()));
+				String result = RequestUtils.get(
+						new URL(Uri.parse(Constants.mRandomImagesURL)
+								.buildUpon().toString()), client);
 				Log.d("HF_API", result);
 				task = CrowsourceDataParser.Parse(result);
 			} catch (MalformedURLException e) {
