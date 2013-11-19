@@ -4,10 +4,7 @@ import in.amolgupta.helpingfaceless.activities.HomeActivity;
 import in.amolgupta.helpingfaceless.common.Constants;
 import in.amolgupta.helpingfaceless.utils.RequestUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -48,7 +45,7 @@ public class SetupActivity extends Activity {
 	/**
 	 * The default email to populate the email field with.
 	 */
-	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
+	public static final String EXTRA_EMAIL = "in.amolgupta.helpingfaceless.extra.EMAIL";
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.

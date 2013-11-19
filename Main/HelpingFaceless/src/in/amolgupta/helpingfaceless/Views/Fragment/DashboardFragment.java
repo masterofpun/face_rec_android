@@ -25,13 +25,17 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.facebook.rebound.SimpleSpringListener;
 import com.facebook.rebound.Spring;
@@ -50,8 +54,10 @@ public class DashboardFragment extends Fragment implements
 	ImageView mImageOne, mImageTwo;
 	private TaskDetails task;
 	ImageButton mBtnPositive, mBtnNegitive, mBtnSkip;
+	ViewPager mViewPager;
 	private DisplayImageOptions options;
 	private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
+	private Animation fadeInAnimation;
 
 	void initializeViews(View fragmentView) {
 		mUploadButton = (Button) fragmentView.findViewById(R.id.btn_upload);
@@ -66,6 +72,7 @@ public class DashboardFragment extends Fragment implements
 		mBtnNegitive.setOnClickListener(this);
 		mBtnPositive.setOnClickListener(this);
 		mBtnSkip.setOnClickListener(this);
+		fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
 
 		SpringSystem springSystem = SpringSystem.create();
 
@@ -81,8 +88,8 @@ public class DashboardFragment extends Fragment implements
 				// state by asking its current value in onSpringUpdate.
 				float value = (float) spring.getCurrentValue();
 				float scale = 1f - (value * 0.5f);
-//				mImageOne.setScaleX(scale);
-//				mImageOne.setScaleY(scale);
+				// mImageOne.setScaleX(scale);
+				// mImageOne.setScaleY(scale);
 			}
 
 		});
@@ -103,13 +110,15 @@ public class DashboardFragment extends Fragment implements
 				.cacheInMemory(true).cacheOnDisc(true)
 				.displayer(new RoundedBitmapDisplayer(20)).build();
 
-		FetchRandomImages task = new FetchRandomImages();
-		task.execute();
+		// FetchRandomImages task = new FetchRandomImages();
+		FetchRandomImages fetchTask = new FetchRandomImages();
+		fetchTask.execute();
 		return fragmentView;
 	}
 
 	@Override
 	public void onClick(View v) {
+		FetchRandomImages fetchTask = new FetchRandomImages();
 		switch (v.getId()) {
 		case R.id.btn_upload:
 			Intent mUploadIntent = new Intent(getActivity(), UpoadForm.class);
@@ -118,12 +127,25 @@ public class DashboardFragment extends Fragment implements
 			break;
 		case R.id.btn_negitive:
 			new SendCSResponse(task.getId(), "", "negitive").execute();
+			Toast.makeText(getActivity(),
+					"Thank you! Fetching Another set of images",
+					Toast.LENGTH_SHORT).show();
+
+			fetchTask.execute();
 			break;
 		case R.id.btn_skip:
 			new SendCSResponse(task.getId(), "", "skip").execute();
+			Toast.makeText(getActivity(),
+					"Thank you! Fetching Another set of images",
+					Toast.LENGTH_SHORT).show();
+			fetchTask.execute();
 			break;
 		case R.id.btn_positive:
 			new SendCSResponse(task.getId(), "", "positive").execute();
+			Toast.makeText(getActivity(),
+					"Thank you! Fetching Another set of images",
+					Toast.LENGTH_SHORT).show();
+			fetchTask.execute();
 			break;
 		default:
 			break;
@@ -171,6 +193,7 @@ public class DashboardFragment extends Fragment implements
 						Constants.mHostURL
 								+ task.getmSecondImage().getPhoto_medium_url(),
 						mImageTwo, options, animateFirstListener);
+				mImageTwo.startAnimation(fadeInAnimation );
 			} else {
 
 			}
@@ -200,4 +223,5 @@ public class DashboardFragment extends Fragment implements
 			}
 		}
 	}
+
 }

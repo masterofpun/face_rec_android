@@ -17,29 +17,22 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent" >
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="#000000"
-            android:orientation="horizontal"
-            android:weightSum="1" >
+
 
             <ImageView
                 android:id="@+id/img_cwds_img1"
-                android:layout_width="0dp"
+                android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight=".5"
                 android:scaleType="fitXY"
                 android:src="@drawable/face_recognition" />
 
             <ImageView
                 android:id="@+id/img_cwds_img2"
-                android:layout_width="0dp"
+                android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight=".5"
                 android:scaleType="fitXY"
                 android:src="@drawable/aishwarya_rai_face" />
-        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="fill_parent"
