@@ -57,7 +57,8 @@ public class DashboardFragment extends Fragment implements
 	ViewPager mViewPager;
 	private DisplayImageOptions options;
 	private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
-	private Animation fadeInAnimation;
+	private static Animation fadeInAnimation;
+	private Animation fadeOutAnimation;
 
 	void initializeViews(View fragmentView) {
 		mUploadButton = (Button) fragmentView.findViewById(R.id.btn_upload);
@@ -73,29 +74,30 @@ public class DashboardFragment extends Fragment implements
 		mBtnPositive.setOnClickListener(this);
 		mBtnSkip.setOnClickListener(this);
 		fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
+		fadeOutAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out);
 
-		SpringSystem springSystem = SpringSystem.create();
-
-		// Add a spring to the system.
-		Spring spring = springSystem.createSpring();
-
-		// Add a listener to observe the motion of the spring.
-		spring.addListener(new SimpleSpringListener() {
-
-			@Override
-			public void onSpringUpdate(Spring spring) {
-				// You can observe the updates in the spring
-				// state by asking its current value in onSpringUpdate.
-				float value = (float) spring.getCurrentValue();
-				float scale = 1f - (value * 0.5f);
-				// mImageOne.setScaleX(scale);
-				// mImageOne.setScaleY(scale);
-			}
-
-		});
-
-		// Set the spring in motion; moving from 0 to 1
-		spring.setEndValue(1);
+//		SpringSystem springSystem = SpringSystem.create();
+//
+//		// Add a spring to the system.
+//		Spring spring = springSystem.createSpring();
+//
+//		// Add a listener to observe the motion of the spring.
+//		spring.addListener(new SimpleSpringListener() {
+//
+//			@Override
+//			public void onSpringUpdate(Spring spring) {
+//				// You can observe the updates in the spring
+//				// state by asking its current value in onSpringUpdate.
+//				float value = (float) spring.getCurrentValue();
+//				float scale = 1f - (value * 0.5f);
+//				// mImageOne.setScaleX(scale);
+//				// mImageOne.setScaleY(scale);
+//			}
+//
+//		});
+//
+//		// Set the spring in motion; moving from 0 to 1
+//		spring.setEndValue(1);
 	}
 
 	@Override
@@ -188,12 +190,14 @@ public class DashboardFragment extends Fragment implements
 				ImageLoader.getInstance().displayImage(
 						Constants.mHostURL
 								+ task.getmFirstImage().getPhoto_medium_url(),
-						mImageOne, options, animateFirstListener);
+						mImageOne, options, null);
 				ImageLoader.getInstance().displayImage(
 						Constants.mHostURL
 								+ task.getmSecondImage().getPhoto_medium_url(),
 						mImageTwo, options, animateFirstListener);
-				mImageTwo.startAnimation(fadeInAnimation );
+//				mImageTwo.startAnimation(fadeInAnimation);
+//				mImageOne.startAnimation(fadeOutAnimation);
+
 			} else {
 
 			}
@@ -217,8 +221,7 @@ public class DashboardFragment extends Fragment implements
 				ImageView imageView = (ImageView) view;
 				boolean firstDisplay = !displayedImages.contains(imageUri);
 				if (firstDisplay) {
-					FadeInBitmapDisplayer.animate(imageView, 500);
-					displayedImages.add(imageUri);
+					imageView.startAnimation(fadeInAnimation);
 				}
 			}
 		}

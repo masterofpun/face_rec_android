@@ -25,6 +25,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -73,7 +74,10 @@ public class SetupActivity extends Activity {
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
 		mEmailView.setText(mEmail);
-
+		mEmailView.requestFocus();
+		InputMethodManager inputManager = (InputMethodManager) this
+				.getSystemService(INPUT_METHOD_SERVICE);
+		inputManager.restartInput(mEmailView);
 		mPasswordView = (EditText) findViewById(R.id.edt_phone_number);
 		mPasswordView
 				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -223,20 +227,19 @@ public class SetupActivity extends Activity {
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		OkHttpClient client = new OkHttpClient();
 
-
-
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			try {
-				String result = RequestUtils.get(new URL(Uri
-						.parse(Constants.mAuthUrl)
-						.buildUpon()
-						.appendQueryParameter("phone_number",
-								mPasswordView.getText().toString())
-						.appendQueryParameter("email",
-								mEmailView.getText().toString()).build()
-						.toString()
-						+ "%0A"), client);
+				String result = RequestUtils.get(
+						new URL(Uri
+								.parse(Constants.mAuthUrl)
+								.buildUpon()
+								.appendQueryParameter("phone_number",
+										mPasswordView.getText().toString())
+								.appendQueryParameter("email",
+										mEmailView.getText().toString())
+								.build().toString()
+								+ "%0A"), client);
 				Log.d("HF_API", result);
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
@@ -270,12 +273,11 @@ public class SetupActivity extends Activity {
 						.getSharedPreferences("MyPref", 0); // 0 - for private
 															// mode
 				Editor editor = pref.edit();
-				
+
 				editor.putString("session", "string value"); // Storing string
 				editor.putBoolean("isLoggedIn", true); // Storing string
-				 
+
 				editor.commit(); // commit changes
-				
 
 				Constants.mIsLoggedIN = true;
 				Intent mDashBoardIntent = new Intent(SetupActivity.this,
