@@ -1,7 +1,6 @@
 package in.amolgupta.helpingfaceless.activities;
 
 import in.amolgupta.helpingfaceless.R;
-import in.amolgupta.helpingfaceless.common.Constants;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +21,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
+import android.app.Notification.Builder;
 import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -33,7 +33,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,6 +47,7 @@ import android.widget.Toast;
 public class UpoadForm extends Activity implements OnClickListener {
 	private static final int TAKE_PICTURE = 85;
 	private Uri imageUri;
+	private Uri selectedImage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +55,9 @@ public class UpoadForm extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_upload_form);
 		Button mUploadButton = (Button) findViewById(R.id.btn_upload_to_server);
 		Button mTryAgain = (Button) findViewById(R.id.btn_try_again);
-		mUploadButton.setOnClickListener(this);
 		mTryAgain.setOnClickListener(this);
+
+		mUploadButton.setOnClickListener(this);
 		takePhoto();
 
 	}
@@ -67,7 +68,7 @@ public class UpoadForm extends Activity implements OnClickListener {
 	public void takePhoto() {
 		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
 		File photo = new File(Environment.getExternalStorageDirectory(),
-				"Pic.jpeg");
+				"Pic.jpg");
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
 		imageUri = Uri.fromFile(photo);
 		startActivityForResult(intent, TAKE_PICTURE);
@@ -88,7 +89,7 @@ public class UpoadForm extends Activity implements OnClickListener {
 			 * Handle camera output
 			 */
 			if (resultCode == Activity.RESULT_OK) {
-				Uri selectedImage = imageUri;
+				selectedImage = imageUri;
 				getContentResolver().notifyChange(selectedImage, null);
 				ImageView imageView = (ImageView) findViewById(R.id.img_upload_form);
 				ContentResolver cr = getContentResolver();
@@ -100,7 +101,8 @@ public class UpoadForm extends Activity implements OnClickListener {
 					imageView.setImageBitmap(bitmap);
 					Toast.makeText(this, selectedImage.toString(),
 							Toast.LENGTH_LONG).show();
-
+					// UploadTask upload = new UploadTask(selectedImage);
+					// upload.execute();
 				} catch (Exception e) {
 					Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT)
 							.show();
@@ -114,7 +116,7 @@ public class UpoadForm extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btn_upload_to_server:
-			UploadTask upload = new UploadTask(imageUri, this);
+			UploadTask upload = new UploadTask(selectedImage);
 			upload.execute();
 			finish();
 			break;
@@ -127,48 +129,34 @@ public class UpoadForm extends Activity implements OnClickListener {
 		private DefaultHttpClient mHttpClient;
 		Uri imageUri;
 		private NotificationManager mNotifyManager;
-		private Builder mBuilder;
-		Context ctx;
+		private android.support.v4.app.NotificationCompat.Builder mBuilder;
 
-		public UploadTask(Uri image, Context ctx) {
+		public UploadTask(Uri image) {
 			this.imageUri = image;
-			this.ctx = ctx;
 			HttpParams params = new BasicHttpParams();
 			params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
 					HttpVersion.HTTP_1_1);
 			mHttpClient = new DefaultHttpClient(params);
 			mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			mBuilder = new NotificationCompat.Builder(ctx);
+			mBuilder = new NotificationCompat.Builder(UpoadForm.this);
 			mBuilder.setContentTitle("Upload")
 					.setContentText("Upload in progress")
 					.setSmallIcon(R.drawable.ic_launcher);
 			mBuilder.setProgress(0, 0, true);
 			// Displays the progress bar for the first time.
 			mNotifyManager.notify(1, mBuilder.build());
-
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			mBuilder.setContentText("Upload complete").setProgress(0, 0, false);
-			mNotifyManager.notify(1, mBuilder.build());
-
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
 		}
 
 		public void uploadUserPhoto(File image) {
 
 			try {
 
-				HttpPost httppost = new HttpPost(Constants.mUploadURL);
-				// httppost.setHeader("Content-Type",
-				// "application/x-www-form-urlencoded");
-				httppost.setHeader("Content-Type", "application/octet-stream");
+				HttpPost httppost = new HttpPost(
+						"http://helpingfaceless.com/api/v1/information/upload");
+
 				MultipartEntity multipartEntity = new MultipartEntity(
-						HttpMultipartMode.STRICT);
-				// multipartEntity.addPart("comments", new
-				// StringBody("what what what!!"));
+						HttpMultipartMode.BROWSER_COMPATIBLE);
+				// multipartEntity.addPart("Title", new StringBody("Title"));
 				// multipartEntity.addPart("Nick", new StringBody("Nick"));
 				// multipartEntity.addPart("Email", new StringBody("Email"));
 				multipartEntity.addPart("photo", new FileBody(image));
@@ -189,6 +177,12 @@ public class UpoadForm extends Activity implements OnClickListener {
 			return null;
 		}
 
+		@Override
+		protected void onPostExecute(Void result) {
+			mBuilder.setContentText("Upload complete").setProgress(0, 0, false);
+			mNotifyManager.notify(1, mBuilder.build());
+			super.onPostExecute(result);
+		}
 	}
 
 	class PhotoUploadResponseHandler implements ResponseHandler<Object> {
