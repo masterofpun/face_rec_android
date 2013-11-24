@@ -8,4 +8,5 @@ public class Constants {
 	public static String mRandomImagesURL = mBaseURL + "/similarity/random";
 	public static String mFeedBackURL = mBaseURL + "/similarity.json";
 	public static String mUploadURL = mBaseURL + "information/upload";
+	public static Boolean mIsProd=false;
 }

@@ -28,6 +28,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.okhttp.OkHttpClient;
 
@@ -113,6 +114,18 @@ public class SetupActivity extends Activity {
 						attemptLogin();
 					}
 				});
+
+		SharedPreferences pref = getApplicationContext().getSharedPreferences(
+				"MyPref", 0); // 0 - for private
+								// mode
+		if (pref.getBoolean("isLoggedIn", false)) {
+			Constants.mIsLoggedIN=true;
+			Intent mDashBoardIntent = new Intent(SetupActivity.this,
+					HomeActivity.class);
+			startActivity(mDashBoardIntent);
+			finish();
+
+		}
 	}
 
 	@Override
@@ -280,10 +293,17 @@ public class SetupActivity extends Activity {
 				editor.commit(); // commit changes
 
 				Constants.mIsLoggedIN = true;
-				Intent mDashBoardIntent = new Intent(SetupActivity.this,
-						HomeActivity.class);
-				startActivity(mDashBoardIntent);
-				finish();
+				if (!Constants.mIsProd) {
+					Intent mDashBoardIntent = new Intent(SetupActivity.this,
+							HomeActivity.class);
+					startActivity(mDashBoardIntent);
+					finish();
+				} else {
+					Toast.makeText(
+							SetupActivity.this,
+							"Please ,ail the the admin/developer to gain access to the application.",
+							Toast.LENGTH_LONG).show();
+				}
 			} else {
 				mPasswordView
 						.setError(getString(R.string.error_incorrect_password));
