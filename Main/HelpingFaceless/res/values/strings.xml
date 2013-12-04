@@ -3,6 +3,7 @@
 
     <string name="app_name">HelpingFaceless</string>
     <string name="action_settings">Settings</string>
+    <string name="action_help">Settings</string>
     <string name="action_about">About us</string>
     <string name="hello_world">Hello world!</string>
     <string name="lbl_dash_new">Upload New Picture</string>
@@ -10,5 +11,11 @@
     <string name="lbl_upload_activity">Upload</string>
     <string name="lbl_btn_upload">UPLOAD</string>
     <string name="lbl_try_again">TRY AGAIN</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="dashboard_label_one">Contribute to fight against human trafficking, help us match the images</string>
 
 </resources>

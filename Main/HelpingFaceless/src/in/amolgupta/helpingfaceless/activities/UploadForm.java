@@ -44,7 +44,7 @@ import android.widget.Toast;
  * @author amol
  * 
  */
-public class UpoadForm extends Activity implements OnClickListener {
+public class UploadForm extends Activity implements OnClickListener {
 	private static final int TAKE_PICTURE = 85;
 	private Uri imageUri;
 	private Uri selectedImage;
@@ -138,7 +138,7 @@ public class UpoadForm extends Activity implements OnClickListener {
 					HttpVersion.HTTP_1_1);
 			mHttpClient = new DefaultHttpClient(params);
 			mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			mBuilder = new NotificationCompat.Builder(UpoadForm.this);
+			mBuilder = new NotificationCompat.Builder(UploadForm.this);
 			mBuilder.setContentTitle("Upload")
 					.setContentText("Upload in progress")
 					.setSmallIcon(R.drawable.ic_launcher);

@@ -1,7 +1,8 @@
 package in.amolgupta.helpingfaceless.Views.Fragment;
 
 import in.amolgupta.helpingfaceless.R;
-import in.amolgupta.helpingfaceless.activities.UpoadForm;
+import in.amolgupta.helpingfaceless.activities.ImageFragment;
+import in.amolgupta.helpingfaceless.activities.UploadForm;
 import in.amolgupta.helpingfaceless.common.Constants;
 import in.amolgupta.helpingfaceless.entities.ImageData;
 import in.amolgupta.helpingfaceless.entities.TaskDetails;
@@ -25,9 +26,15 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -37,33 +44,32 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.facebook.rebound.SimpleSpringListener;
-import com.facebook.rebound.Spring;
-import com.facebook.rebound.SpringSystem;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.squareup.okhttp.OkHttpClient;
 
 public class DashboardFragment extends Fragment implements
 		android.view.View.OnClickListener {
 	Button mUploadButton;
-	ImageView mImageOne, mImageTwo;
+	ImageView mImageOne, mImageTwo, mThmbOne, mThmbTwo;
 	private TaskDetails task;
 	ImageButton mBtnPositive, mBtnNegitive, mBtnSkip;
-	ViewPager mViewPager;
 	private DisplayImageOptions options;
 	private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
 	private static Animation fadeInAnimation;
 	private Animation fadeOutAnimation;
+	private static final int NUM_PAGES = 2;
+	private ViewPager mPager;
 
 	void initializeViews(View fragmentView) {
 		mUploadButton = (Button) fragmentView.findViewById(R.id.btn_upload);
 		mImageOne = (ImageView) fragmentView.findViewById(R.id.img_cwds_img1);
 		mImageTwo = (ImageView) fragmentView.findViewById(R.id.img_cwds_img2);
+		mThmbOne = (ImageView) fragmentView.findViewById(R.id.thmb_cwds_img1);
+		mThmbTwo = (ImageView) fragmentView.findViewById(R.id.thmb_cwds_img2);
 		mBtnNegitive = (ImageButton) fragmentView
 				.findViewById(R.id.btn_negitive);
 		mBtnPositive = (ImageButton) fragmentView
@@ -73,31 +79,34 @@ public class DashboardFragment extends Fragment implements
 		mBtnNegitive.setOnClickListener(this);
 		mBtnPositive.setOnClickListener(this);
 		mBtnSkip.setOnClickListener(this);
-		fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
-		fadeOutAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out);
-
-//		SpringSystem springSystem = SpringSystem.create();
-//
-//		// Add a spring to the system.
-//		Spring spring = springSystem.createSpring();
-//
-//		// Add a listener to observe the motion of the spring.
-//		spring.addListener(new SimpleSpringListener() {
-//
-//			@Override
-//			public void onSpringUpdate(Spring spring) {
-//				// You can observe the updates in the spring
-//				// state by asking its current value in onSpringUpdate.
-//				float value = (float) spring.getCurrentValue();
-//				float scale = 1f - (value * 0.5f);
-//				// mImageOne.setScaleX(scale);
-//				// mImageOne.setScaleY(scale);
-//			}
-//
-//		});
-//
-//		// Set the spring in motion; moving from 0 to 1
-//		spring.setEndValue(1);
+		fadeInAnimation = AnimationUtils.loadAnimation(getActivity(),
+				R.anim.fade_in);
+		fadeOutAnimation = AnimationUtils.loadAnimation(getActivity(),
+				R.anim.fade_out);
+		mThmbOne.setOnClickListener(this);
+		mThmbTwo.setOnClickListener(this);
+		// SpringSystem springSystem = SpringSystem.create();
+		//
+		// // Add a spring to the system.
+		// Spring spring = springSystem.createSpring();
+		//
+		// // Add a listener to observe the motion of the spring.
+		// spring.addListener(new SimpleSpringListener() {
+		//
+		// @Override
+		// public void onSpringUpdate(Spring spring) {
+		// // You can observe the updates in the spring
+		// // state by asking its current value in onSpringUpdate.
+		// float value = (float) spring.getCurrentValue();
+		// float scale = 1f - (value * 0.5f);
+		// // mImageOne.setScaleX(scale);
+		// // mImageOne.setScaleY(scale);
+		// }
+		//
+		// });
+		//
+		// // Set the spring in motion; moving from 0 to 1
+		// spring.setEndValue(1);
 	}
 
 	@Override
@@ -118,12 +127,28 @@ public class DashboardFragment extends Fragment implements
 		return fragmentView;
 	}
 
+	private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+		public ScreenSlidePagerAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return new ImageFragment();
+		}
+
+		@Override
+		public int getCount() {
+			return NUM_PAGES;
+		}
+	}
+
 	@Override
 	public void onClick(View v) {
 		FetchRandomImages fetchTask = new FetchRandomImages();
 		switch (v.getId()) {
 		case R.id.btn_upload:
-			Intent mUploadIntent = new Intent(getActivity(), UpoadForm.class);
+			Intent mUploadIntent = new Intent(getActivity(), UploadForm.class);
 			startActivity(mUploadIntent);
 
 			break;
@@ -148,6 +173,22 @@ public class DashboardFragment extends Fragment implements
 					"Thank you! Fetching Another set of images",
 					Toast.LENGTH_SHORT).show();
 			fetchTask.execute();
+			break;
+		case R.id.thmb_cwds_img1:
+			ImageLoader.getInstance().displayImage(
+					Constants.mHostURL
+							+ task.getmFirstImage().getPhoto_medium_url(),
+					mImageOne, options, null);
+			break;
+		case R.id.thmb_cwds_img2:
+			ImageLoader.getInstance().displayImage(
+					Constants.mHostURL
+							+ task.getmSecondImage().getPhoto_medium_url(),
+					mImageOne, options, null);
+			break;
+		case R.id.img_cwds_img1:
+			
+			
 			break;
 		default:
 			break;
@@ -193,11 +234,21 @@ public class DashboardFragment extends Fragment implements
 						mImageOne, options, null);
 				ImageLoader.getInstance().displayImage(
 						Constants.mHostURL
+								+ task.getmFirstImage().getPhoto_medium_url(),
+						mThmbOne, options, null);
+				ImageLoader.getInstance().displayImage(
+						Constants.mHostURL
 								+ task.getmSecondImage().getPhoto_medium_url(),
 						mImageTwo, options, animateFirstListener);
-//				mImageTwo.startAnimation(fadeInAnimation);
-//				mImageOne.startAnimation(fadeOutAnimation);
-
+				ImageLoader.getInstance().displayImage(
+						Constants.mHostURL
+								+ task.getmSecondImage().getPhoto_medium_url(),
+						mThmbTwo, options, null);
+				// mImageTwo.startAnimation(fadeInAnimation);
+				// mImageOne.startAnimation(fadeOutAnimation);
+				// mPager.beginFakeDrag();
+				// mPager.fakeDragBy((float) .5);
+				// mPager.endFakeDrag();
 			} else {
 
 			}
@@ -221,10 +272,23 @@ public class DashboardFragment extends Fragment implements
 				ImageView imageView = (ImageView) view;
 				boolean firstDisplay = !displayedImages.contains(imageUri);
 				if (firstDisplay) {
-					imageView.startAnimation(fadeInAnimation);
+					// imageView.startAnimation(fadeInAnimation);
 				}
 			}
 		}
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.app_menu, menu);
+
+		super.onCreateOptionsMenu(menu, inflater);
+	}
 }

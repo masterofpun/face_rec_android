@@ -1,13 +1,25 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".HomeActivity" >
+    android:layout_height="match_parent" >
 
-    <fragment
-        android:id="@+id/credit_card_fragment"
-        android:name="in.amolgupta.helpingfaceless.Views.Fragment.DashboardFragment"
+    <!-- The main content view -->
+
+    <FrameLayout
+        android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <!-- The navigation drawer -->
 
-</RelativeLayout>
+    <ListView
+        android:paddingTop="96dp"
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+		android:background="@android:color/background_dark"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="1dp" />
+
+</android.support.v4.widget.DrawerLayout>
