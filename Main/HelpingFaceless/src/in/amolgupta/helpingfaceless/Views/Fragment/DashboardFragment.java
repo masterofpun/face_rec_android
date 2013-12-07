@@ -54,9 +54,9 @@ import com.squareup.okhttp.OkHttpClient;
 public class DashboardFragment extends Fragment implements
 		android.view.View.OnClickListener {
 	Button mUploadButton;
-	ImageView mImageOne, mImageTwo, mThmbOne, mThmbTwo;
+	ImageView /*mImageOne, mImageTwo*/ mThmbOne, mThmbTwo;
 	private TaskDetails task;
-	ImageButton mBtnPositive, mBtnNegitive, mBtnSkip;
+	Button mBtnPositive, mBtnNegitive, mBtnSkip;
 	private DisplayImageOptions options;
 	private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
 	private static Animation fadeInAnimation;
@@ -66,15 +66,15 @@ public class DashboardFragment extends Fragment implements
 
 	void initializeViews(View fragmentView) {
 		mUploadButton = (Button) fragmentView.findViewById(R.id.btn_upload);
-		mImageOne = (ImageView) fragmentView.findViewById(R.id.img_cwds_img1);
-		mImageTwo = (ImageView) fragmentView.findViewById(R.id.img_cwds_img2);
+//		mImageOne = (ImageView) fragmentView.findViewById(R.id.img_cwds_img1);
+//		mImageTwo = (ImageView) fragmentView.findViewById(R.id.img_cwds_img2);
 		mThmbOne = (ImageView) fragmentView.findViewById(R.id.thmb_cwds_img1);
 		mThmbTwo = (ImageView) fragmentView.findViewById(R.id.thmb_cwds_img2);
-		mBtnNegitive = (ImageButton) fragmentView
+		mBtnNegitive = (Button) fragmentView
 				.findViewById(R.id.btn_negitive);
-		mBtnPositive = (ImageButton) fragmentView
+		mBtnPositive = (Button) fragmentView
 				.findViewById(R.id.btn_positive);
-		mBtnSkip = (ImageButton) fragmentView.findViewById(R.id.btn_skip);
+		mBtnSkip = (Button) fragmentView.findViewById(R.id.btn_skip);
 		mUploadButton.setOnClickListener(this);
 		mBtnNegitive.setOnClickListener(this);
 		mBtnPositive.setOnClickListener(this);
@@ -119,7 +119,7 @@ public class DashboardFragment extends Fragment implements
 				// .showImageForEmptyUri(R.drawable.ic_empty)
 				// .showImageOnFail(R.drawable.ic_error)
 				.cacheInMemory(true).cacheOnDisc(true)
-				.displayer(new RoundedBitmapDisplayer(20)).build();
+				.displayer(new RoundedBitmapDisplayer(0)).build();
 
 		// FetchRandomImages task = new FetchRandomImages();
 		FetchRandomImages fetchTask = new FetchRandomImages();
@@ -175,16 +175,16 @@ public class DashboardFragment extends Fragment implements
 			fetchTask.execute();
 			break;
 		case R.id.thmb_cwds_img1:
-			ImageLoader.getInstance().displayImage(
-					Constants.mHostURL
-							+ task.getmFirstImage().getPhoto_medium_url(),
-					mImageOne, options, null);
+//			ImageLoader.getInstance().displayImage(
+//					Constants.mHostURL
+//							+ task.getmFirstImage().getPhoto_medium_url(),
+//					mImageOne, options, null);
 			break;
 		case R.id.thmb_cwds_img2:
-			ImageLoader.getInstance().displayImage(
-					Constants.mHostURL
-							+ task.getmSecondImage().getPhoto_medium_url(),
-					mImageOne, options, null);
+//			ImageLoader.getInstance().displayImage(
+//					Constants.mHostURL
+//							+ task.getmSecondImage().getPhoto_medium_url(),
+//					mImageOne, options, null);
 			break;
 		case R.id.img_cwds_img1:
 			
@@ -228,18 +228,18 @@ public class DashboardFragment extends Fragment implements
 
 			if (success) {
 
-				ImageLoader.getInstance().displayImage(
-						Constants.mHostURL
-								+ task.getmFirstImage().getPhoto_medium_url(),
-						mImageOne, options, null);
+//				ImageLoader.getInstance().displayImage(
+//						Constants.mHostURL
+//								+ task.getmFirstImage().getPhoto_medium_url(),
+//						mImageOne, options, null);
 				ImageLoader.getInstance().displayImage(
 						Constants.mHostURL
 								+ task.getmFirstImage().getPhoto_medium_url(),
 						mThmbOne, options, null);
-				ImageLoader.getInstance().displayImage(
-						Constants.mHostURL
-								+ task.getmSecondImage().getPhoto_medium_url(),
-						mImageTwo, options, animateFirstListener);
+//				ImageLoader.getInstance().displayImage(
+//						Constants.mHostURL
+//								+ task.getmSecondImage().getPhoto_medium_url(),
+//						mImageTwo, options, animateFirstListener);
 				ImageLoader.getInstance().displayImage(
 						Constants.mHostURL
 								+ task.getmSecondImage().getPhoto_medium_url(),
