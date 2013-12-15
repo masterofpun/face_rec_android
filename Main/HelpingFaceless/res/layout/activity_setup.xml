@@ -47,22 +47,22 @@
                 android:hint="@string/prompt_email"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
-                android:text="test@test.com"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:text="test@test.com" />
 
             <EditText
                 android:id="@+id/edt_phone_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_phone"
-                android:visibility="gone"
                 android:imeActionId="@+id/login"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"
                 android:inputType="phone"
-                android:text="9876543210"
                 android:maxLines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:text="9876543210"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/sign_in_button"
@@ -74,6 +74,11 @@
                 android:paddingRight="32dp"
                 android:text="@string/action_sign_in_register" />
         </LinearLayout>
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </ScrollView>
 
 </merge>

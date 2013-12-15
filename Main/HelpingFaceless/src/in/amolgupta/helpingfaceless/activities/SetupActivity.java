@@ -1,6 +1,10 @@
-package in.amolgupta.helpingfaceless;
+package in.amolgupta.helpingfaceless.activities;
 
-import in.amolgupta.helpingfaceless.activities.HomeActivity;
+import in.amolgupta.helpingfaceless.R;
+import in.amolgupta.helpingfaceless.R.id;
+import in.amolgupta.helpingfaceless.R.layout;
+import in.amolgupta.helpingfaceless.R.menu;
+import in.amolgupta.helpingfaceless.R.string;
 import in.amolgupta.helpingfaceless.common.Constants;
 import in.amolgupta.helpingfaceless.utils.RequestUtils;
 

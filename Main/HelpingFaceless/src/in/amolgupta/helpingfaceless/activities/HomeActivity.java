@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -64,7 +66,7 @@ public class HomeActivity extends ActionBarActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home, menu);
+		// getMenuInflater().inflate(R.menu.home, menu);
 		return true;
 	}
 
@@ -129,7 +131,20 @@ public class HomeActivity extends ActionBarActivity implements
 		case 2:
 			break;
 		case 3:
+			SharedPreferences pref = getApplicationContext()
+					.getSharedPreferences("MyPref", 0); // 0 - for private
+														// mode
+			Editor editor = pref.edit();
+
+			editor.putString("session", ""); // Storing string
+			editor.putBoolean("isLoggedIn", false); // Storing string
+
+			editor.commit(); // commit changes
+			Intent loginIntent = new Intent(HomeActivity.this,
+					SetupActivity.class);
+			startActivity(loginIntent);
 			finish();
+
 		default:
 			fragment = new DashboardFragment();
 			if (fragment != null) {
