@@ -25,7 +25,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class HomeActivity extends ActionBarActivity implements
+public class HomeActivity extends HFBaseActivity implements
 		OnItemClickListener {
 
 	private DrawerLayout mDrawerLayout;

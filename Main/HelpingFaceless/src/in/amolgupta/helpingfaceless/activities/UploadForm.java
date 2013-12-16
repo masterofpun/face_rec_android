@@ -21,7 +21,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
-import android.app.Notification.Builder;
 import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -44,7 +43,7 @@ import android.widget.Toast;
  * @author amol
  * 
  */
-public class UploadForm extends Activity implements OnClickListener {
+public class UploadForm extends HFBaseActivity implements OnClickListener {
 	private static final int TAKE_PICTURE = 85;
 	private Uri imageUri;
 	private Uri selectedImage;
