@@ -47,7 +47,8 @@
                 android:hint="@string/prompt_email"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:text="test@test.com" />
 
             <EditText
                 android:id="@+id/edt_phone_number"
@@ -59,7 +60,9 @@
                 android:imeOptions="actionUnspecified"
                 android:inputType="phone"
                 android:maxLines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:text="9876543210"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/sign_in_button"

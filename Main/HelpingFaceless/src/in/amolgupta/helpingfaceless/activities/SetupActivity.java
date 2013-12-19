@@ -1,38 +1,34 @@
-package in.amolgupta.helpingfaceless;
+package in.amolgupta.helpingfaceless.activities;
 
-import in.amolgupta.helpingfaceless.activities.HomeActivity;
+import in.amolgupta.helpingfaceless.R;
 import in.amolgupta.helpingfaceless.common.Constants;
+import in.amolgupta.helpingfaceless.utils.RequestUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.regex.Pattern;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.okhttp.OkHttpClient;
 
@@ -51,7 +47,7 @@ public class SetupActivity extends Activity {
 	/**
 	 * The default email to populate the email field with.
 	 */
-	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
+	public static final String EXTRA_EMAIL = "in.amolgupta.helpingfaceless.extra.EMAIL";
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -79,7 +75,10 @@ public class SetupActivity extends Activity {
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
 		mEmailView.setText(mEmail);
-
+		mEmailView.requestFocus();
+		InputMethodManager inputManager = (InputMethodManager) this
+				.getSystemService(INPUT_METHOD_SERVICE);
+		inputManager.restartInput(mEmailView);
 		mPasswordView = (EditText) findViewById(R.id.edt_phone_number);
 		mPasswordView
 				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -93,17 +92,17 @@ public class SetupActivity extends Activity {
 						return false;
 					}
 				});
-		Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-		Account[] accounts = AccountManager.get(this).getAccounts();
-		for (Account account : accounts) {
-			if (emailPattern.matcher(account.name).matches()) {
-				mEmailView.setText(account.name);
-				break;
-			}
-		}
-		TelephonyManager tMgr = (TelephonyManager) this
-				.getSystemService(Context.TELEPHONY_SERVICE);
-		mPasswordView.setText(tMgr.getLine1Number());
+		// Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+		// Account[] accounts = AccountManager.get(this).getAccounts();
+		// for (Account account : accounts) {
+		// if (emailPattern.matcher(account.name).matches()) {
+		// mEmailView.setText(account.name);
+		// break;
+		// }
+		// }
+		// TelephonyManager tMgr = (TelephonyManager) this
+		// .getSystemService(Context.TELEPHONY_SERVICE);
+		// mPasswordView.setText(tMgr.getLine1Number());
 		mLoginFormView = findViewById(R.id.login_form);
 		mLoginStatusView = findViewById(R.id.login_status);
 		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
@@ -115,6 +114,18 @@ public class SetupActivity extends Activity {
 						attemptLogin();
 					}
 				});
+
+		SharedPreferences pref = getApplicationContext().getSharedPreferences(
+				"MyPref", 0); // 0 - for private
+								// mode
+		if (pref.getBoolean("isLoggedIn", false)) {
+			Constants.mIsLoggedIN=true;
+			Intent mDashBoardIntent = new Intent(SetupActivity.this,
+					HomeActivity.class);
+			startActivity(mDashBoardIntent);
+			finish();
+
+		}
 	}
 
 	@Override
@@ -229,41 +240,19 @@ public class SetupActivity extends Activity {
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		OkHttpClient client = new OkHttpClient();
 
-		byte[] readFully(InputStream in) throws IOException {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			byte[] buffer = new byte[1024];
-			for (int count; (count = in.read(buffer)) != -1;) {
-				out.write(buffer, 0, count);
-			}
-			return out.toByteArray();
-		}
-
-		String get(URL url) throws IOException {
-			HttpURLConnection connection = client.open(url);
-			InputStream in = null;
-			try {
-				// Read the response.
-				in = connection.getInputStream();
-				byte[] response = readFully(in);
-				return new String(response, "UTF-8");
-			} finally {
-				if (in != null)
-					in.close();
-			}
-		}
-
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			try {
-				String result = get(new URL(Uri
-						.parse(Constants.mAuthUrl)
-						.buildUpon()
-						.appendQueryParameter("phone_number",
-								mPasswordView.getText().toString())
-						.appendQueryParameter("email",
-								mEmailView.getText().toString()).build()
-						.toString()
-						+ "%0A"));
+				String result = RequestUtils.get(
+						new URL(Uri
+								.parse(Constants.mAuthUrl)
+								.buildUpon()
+								.appendQueryParameter("phone_number",
+										mPasswordView.getText().toString())
+								.appendQueryParameter("email",
+										mEmailView.getText().toString())
+								.build().toString()
+								+ "%0A"), client);
 				Log.d("HF_API", result);
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
@@ -293,11 +282,28 @@ public class SetupActivity extends Activity {
 			showProgress(false);
 
 			if (success) {
+				SharedPreferences pref = getApplicationContext()
+						.getSharedPreferences("MyPref", 0); // 0 - for private
+															// mode
+				Editor editor = pref.edit();
+
+				editor.putString("session", "string value"); // Storing string
+				editor.putBoolean("isLoggedIn", true); // Storing string
+
+				editor.commit(); // commit changes
+
 				Constants.mIsLoggedIN = true;
-				Intent mDashBoardIntent = new Intent(SetupActivity.this,
-						HomeActivity.class);
-				startActivity(mDashBoardIntent);
-				finish();
+				if (!Constants.mIsProd) {
+					Intent mDashBoardIntent = new Intent(SetupActivity.this,
+							HomeActivity.class);
+					startActivity(mDashBoardIntent);
+					finish();
+				} else {
+					Toast.makeText(
+							SetupActivity.this,
+							"Please ,ail the the admin/developer to gain access to the application.",
+							Toast.LENGTH_LONG).show();
+				}
 			} else {
 				mPasswordView
 						.setError(getString(R.string.error_incorrect_password));
