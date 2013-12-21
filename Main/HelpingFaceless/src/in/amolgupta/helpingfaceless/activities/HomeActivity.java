@@ -11,9 +11,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,14 +25,14 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class HomeActivity extends HFBaseActivity implements
-		OnItemClickListener {
+public class HomeActivity extends HFBaseActivity implements OnItemClickListener {
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private DashboardFragment fragment;
 	private NavigationAdapter adapter;
 	private ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
+	private ActionBarDrawerToggle mDrawerToggle;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -44,12 +44,11 @@ public class HomeActivity extends HFBaseActivity implements
 
 		mNavItems.add(new NavItem("Home"));
 		mNavItems.add(new NavItem("Upload Image"));
-		mNavItems.add(new NavItem("My Pledge"));
+//		mNavItems.add(new NavItem("My Pledge"));
 		mNavItems.add(new NavItem("Sign Out"));
 
 		adapter = new NavigationAdapter(mNavItems, this);
 		mDrawerList.setAdapter(adapter);
-		mDrawerList.setOnItemClickListener(this);
 		fragment = new DashboardFragment();
 		if (fragment != null) {
 			FragmentManager fragmentManager = getSupportFragmentManager();
@@ -61,6 +60,39 @@ public class HomeActivity extends HFBaseActivity implements
 			// error in creating fragment
 			Log.e("MainActivity", "Error in creating fragment");
 		}
+		mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
+		mDrawerLayout, /* DrawerLayout object */
+		R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
+		R.string.drawer_open, /* "open drawer" description */
+		R.string.drawer_close /* "close drawer" description */
+		) {
+
+			/** Called when a drawer has settled in a completely closed state. */
+			public void onDrawerClosed(View view) {
+				getSupportActionBar().setTitle("Home");
+			}
+
+			/** Called when a drawer has settled in a completely open state. */
+			public void onDrawerOpened(View drawerView) {
+				getSupportActionBar().setTitle("Home");
+			}
+		};
+
+		// Set the drawer toggle as the DrawerListener
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+
+		mDrawerList.setOnItemClickListener(this);
+
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
 	}
 
 	@Override
@@ -129,8 +161,6 @@ public class HomeActivity extends HFBaseActivity implements
 			Intent uploadIntent = new Intent(this, UploadForm.class);
 			startActivity(uploadIntent);
 		case 2:
-			break;
-		case 3:
 			SharedPreferences pref = getApplicationContext()
 					.getSharedPreferences("MyPref", 0); // 0 - for private
 														// mode

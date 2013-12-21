@@ -1,145 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#eedddddd"
     android:orientation="vertical" >
 
-    <TextView
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:gravity="center"
-        android:padding="8dp"
-        android:singleLine="false"
-        android:text="@string/dashboard_label_one" >
-    </TextView>
+        android:orientation="vertical" >
 
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <!--
-             <ImageView
-            android:id="@+id/img_cwds_img1"
+        <TextView
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:scaleType="fitXY" />
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:gravity="center"
+            android:padding="8dp"
+            android:singleLine="false"
+            android:text="@string/dashboard_label_one" >
+        </TextView>
 
-        <ImageView
-            android:id="@+id/img_cwds_img2"
+        <FrameLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:scaleType="fitXY" />
-        -->
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="240dp"
+                    android:orientation="horizontal"
+                    android:weightSum="1" >
+
+                    <ImageView
+                        android:id="@+id/thmb_cwds_img1"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight=".5"
+                        android:scaleType="fitXY" />
+
+                    <ImageView
+                        android:id="@+id/thmb_cwds_img2"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight=".5"
+                        android:scaleType="fitXY" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="8dp"
+                    android:text="@string/lbl_dash_question" >
+                </TextView>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:weightSum=".9" >
+
+                    <Button
+                        android:id="@+id/btn_positive"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight=".3"
+                        android:adjustViewBounds="true"
+                        android:background="#6666FF"
+                        android:text="Yes"
+                        android:textColor="#FFFFFF" />
+
+                    <Button
+                        android:id="@+id/btn_negitive"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight=".3"
+                        android:adjustViewBounds="true"
+                        android:background="#666666"
+                        android:text="No"
+                        android:textColor="#FFFFFF" />
+
+                    <Button
+                        android:id="@+id/btn_skip"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight=".3"
+                        android:adjustViewBounds="true"
+                        android:background="#FF6666"
+                        android:text="Cant Say"
+                        android:textColor="#FFFFFF" />
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:gravity="bottom"
-            android:orientation="vertical" >
+            android:background="@android:color/background_light"
+            android:orientation="vertical"
+            android:padding="8dp" >
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/txt_dash_new_title"
                 android:layout_width="fill_parent"
-                android:layout_height="240dp"
-                android:orientation="horizontal"
-                android:weightSum="1" >
-
-                <ImageView
-                    android:id="@+id/thmb_cwds_img1"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight=".5"
-                    android:scaleType="fitXY" />
-
-                <ImageView
-                    android:id="@+id/thmb_cwds_img2"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight=".5"
-                    android:scaleType="fitXY" />
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Saw a lost child?"
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:paddingTop="8dp"
-                android:text="@string/lbl_dash_question" >
-            </TextView>
+                android:gravity="center"
+                android:singleLine="false"
+                android:text="Upload their picture and we may help them back to their home" />
 
-            <LinearLayout
+            <Button
+                android:id="@+id/btn_upload"
                 android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:padding="8dp"
-                android:weightSum=".9" >
-
-                <Button
-                    android:id="@+id/btn_positive"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight=".3"
-                    android:adjustViewBounds="true"
-                    android:background="#6666FF"
-                    android:text="Yes"
-                    android:textColor="#FFFFFF" />
-
-                <Button
-                    android:id="@+id/btn_negitive"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight=".3"
-                    android:adjustViewBounds="true"
-                    android:background="#666666"
-                    android:text="No"
-                    android:textColor="#FFFFFF" />
-
-                <Button
-                    android:id="@+id/btn_skip"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight=".3"
-                    android:adjustViewBounds="true"
-                    android:background="#FF6666"
-                    android:text="Cant Say"
-                    android:textColor="#FFFFFF" />
-            </LinearLayout>
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="#6666FF"
+                android:text="@string/lbl_dash_new"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
-    </FrameLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/background_light"
-        android:orientation="vertical"
-        android:padding="8dp" >
-
-        <TextView
-            android:id="@+id/txt_dash_new_title"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="Saw a lost child?"
-            android:textSize="16dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:singleLine="false"
-            android:text="Upload their picture and we may help them back to their home" />
-
-        <Button
-            android:id="@+id/btn_upload"
-            android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            android:layout_margin="8dp"
-            android:background="#6666FF"
-            android:text="@string/lbl_dash_new"
-            android:textColor="#FFFFFF" />
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>
