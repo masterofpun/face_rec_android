@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -44,7 +46,7 @@ public class HomeActivity extends HFBaseActivity implements OnItemClickListener 
 
 		mNavItems.add(new NavItem("Home"));
 		mNavItems.add(new NavItem("Upload Image"));
-//		mNavItems.add(new NavItem("My Pledge"));
+		// mNavItems.add(new NavItem("My Pledge"));
 		mNavItems.add(new NavItem("Sign Out"));
 
 		adapter = new NavigationAdapter(mNavItems, this);
@@ -69,12 +71,10 @@ public class HomeActivity extends HFBaseActivity implements OnItemClickListener 
 
 			/** Called when a drawer has settled in a completely closed state. */
 			public void onDrawerClosed(View view) {
-				getSupportActionBar().setTitle("Home");
 			}
 
 			/** Called when a drawer has settled in a completely open state. */
 			public void onDrawerOpened(View drawerView) {
-				getSupportActionBar().setTitle("Home");
 			}
 		};
 
@@ -141,6 +141,24 @@ public class HomeActivity extends HFBaseActivity implements OnItemClickListener 
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Pass the event to ActionBarDrawerToggle, if it returns
+		// true, then it has handled the app icon touch event
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+		// Handle your other action bar items...
+
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		switch (arg2) {
 
@@ -160,6 +178,7 @@ public class HomeActivity extends HFBaseActivity implements OnItemClickListener 
 		case 1:
 			Intent uploadIntent = new Intent(this, UploadForm.class);
 			startActivity(uploadIntent);
+			break;
 		case 2:
 			SharedPreferences pref = getApplicationContext()
 					.getSharedPreferences("MyPref", 0); // 0 - for private

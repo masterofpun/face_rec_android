@@ -1,7 +1,7 @@
 <resources>
 
     <string name="title_activity_setup">Sign in</string>
-
+<string name="title_activity_home">Helping Faceless</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_phone">Phone Number</string>
