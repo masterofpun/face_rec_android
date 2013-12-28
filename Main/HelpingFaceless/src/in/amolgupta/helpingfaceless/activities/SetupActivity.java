@@ -12,7 +12,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
@@ -30,13 +32,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
+import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.plus.PlusClient;
 import com.squareup.okhttp.OkHttpClient;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class SetupActivity extends Activity {
+public class SetupActivity extends Activity implements View.OnClickListener,
+		ConnectionCallbacks, OnConnectionFailedListener {
 	/**
 	 * A dummy authentication store containing known user names and passwords.
 	 * TODO: remove after connecting to a real authentication system.
@@ -64,6 +72,13 @@ public class SetupActivity extends Activity {
 	private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
+	private SignInButton GPlusSigninButton;
+	private static final String TAG = "ExampleActivity";
+	private static final int REQUEST_CODE_RESOLVE_ERR = 9000;
+
+	private ProgressDialog mConnectionProgressDialog;
+	private PlusClient mPlusClient;
+	private ConnectionResult mConnectionResult;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +89,7 @@ public class SetupActivity extends Activity {
 		// Set up the login form.
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
+		GPlusSigninButton = (SignInButton) findViewById(R.id.plus_sign_in_button);
 		mEmailView.setText(mEmail);
 		mEmailView.requestFocus();
 		InputMethodManager inputManager = (InputMethodManager) this
@@ -119,13 +135,19 @@ public class SetupActivity extends Activity {
 				"MyPref", 0); // 0 - for private
 								// mode
 		if (pref.getBoolean("isLoggedIn", false)) {
-			Constants.mIsLoggedIN=true;
+			Constants.mIsLoggedIN = true;
 			Intent mDashBoardIntent = new Intent(SetupActivity.this,
 					HomeActivity.class);
 			startActivity(mDashBoardIntent);
 			finish();
 
 		}
+		GPlusSigninButton.setOnClickListener(this);
+		mPlusClient = new PlusClient.Builder(this, this, this).setActions(
+				"http://schemas.google.com/AddActivity",
+				"http://schemas.google.com/BuyActivity").build();
+		mConnectionProgressDialog = new ProgressDialog(this);
+		mConnectionProgressDialog.setMessage("Signing in...");
 	}
 
 	@Override
@@ -316,5 +338,75 @@ public class SetupActivity extends Activity {
 			mAuthTask = null;
 			showProgress(false);
 		}
+	}
+
+	@Override
+	public void onClick(View view) {
+		if (view.getId() == R.id.plus_sign_in_button && !mPlusClient.isConnected()) {
+			if (mConnectionResult == null) {
+				mConnectionProgressDialog.show();
+			} else {
+				try {
+					mConnectionResult.startResolutionForResult(this,
+							REQUEST_CODE_RESOLVE_ERR);
+				} catch (SendIntentException e) {
+					// Try connecting again.
+					mConnectionResult = null;
+					mPlusClient.connect();
+				}
+			}
+		}
+	}
+
+	@Override
+	public void onConnected(Bundle connectionHint) {
+		mConnectionProgressDialog.dismiss();
+		Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		mPlusClient.connect();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		mPlusClient.disconnect();
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult result) {
+		if (mConnectionProgressDialog.isShowing()) {
+			// The user clicked the sign-in button already. Start to resolve
+			// connection errors. Wait until onConnected() to dismiss the
+			// connection dialog.
+			if (result.hasResolution()) {
+				try {
+					result.startResolutionForResult(this,
+							REQUEST_CODE_RESOLVE_ERR);
+				} catch (SendIntentException e) {
+					mPlusClient.connect();
+				}
+			}
+		}
+		// Save the result and resolve the connection failure upon a user click.
+		mConnectionResult = result;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int responseCode,
+			Intent intent) {
+		if (requestCode == REQUEST_CODE_RESOLVE_ERR
+				&& responseCode == RESULT_OK) {
+			mConnectionResult = null;
+			mPlusClient.connect();
+		}
+	}
+
+	@Override
+	public void onDisconnected() {
+		Log.d(TAG, "disconnected");
 	}
 }

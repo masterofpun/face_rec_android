@@ -33,11 +33,11 @@ public class SendCSResponse extends AsyncTask<Void, Void, Boolean> {
 		JsonObject inputTaskObject = new JsonObject();
 		inputTaskObject.addProperty("id", taskId);
 		JsonObject inputUserObject = new JsonObject();
-		inputUserObject.addProperty("selected", feedback);
+		inputUserObject.addProperty("similarity", feedback);
 
 		JsonObject inputObject = new JsonObject();
-		inputObject.addProperty("access_token", "e2ad9723-b938-457b-8377-6e42f01f6697");
-		inputObject.addProperty("task", inputTaskObject.toString());
+//		inputObject.addProperty("access_token", "e2ad9723-b938-457b-8377-6e42f01f6697");
+		inputObject.addProperty("task", taskId);
 		inputObject.addProperty("user", inputUserObject.toString());
 		Log.d("HF_API",inputObject.toString());
 		return inputObject.toString();
