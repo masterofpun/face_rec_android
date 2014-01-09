@@ -19,5 +19,5 @@
     <string name="title_section3">Section 3</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="dashboard_label_one">Contribute to fight against human trafficking, help us match the images</string>
-
+	<string name="app_id">701553546544583</string>
 </resources>

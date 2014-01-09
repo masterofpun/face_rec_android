@@ -6,7 +6,7 @@ public class Constants {
 	public static String mBaseURL = mHostURL + "api/v1/";
 	public static String mAuthUrl = mBaseURL + "auth/signup/?";
 	public static String mRandomImagesURL = mBaseURL + "/similarity/random";
-	public static String mFeedBackURL = mBaseURL + "/similarity.json";
+	public static String mFeedBackURL = mBaseURL + "/similarity";
 	public static String mUploadURL = mBaseURL + "information/upload";
 	public static Boolean mIsProd=false;
 }

@@ -6,6 +6,8 @@ import in.amolgupta.helpingfaceless.entities.NavItem;
 
 import java.util.ArrayList;
 
+import com.facebook.Session;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -180,6 +182,10 @@ public class HomeActivity extends HFBaseActivity implements OnItemClickListener 
 			startActivity(uploadIntent);
 			break;
 		case 2:
+			Session session = Session.getActiveSession();
+			if (!session.isClosed()) {
+				session.closeAndClearTokenInformation();
+			}
 			SharedPreferences pref = getApplicationContext()
 					.getSharedPreferences("MyPref", 0); // 0 - for private
 														// mode

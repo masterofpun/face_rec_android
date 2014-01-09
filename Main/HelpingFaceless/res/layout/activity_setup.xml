@@ -76,14 +76,23 @@
 
             <TextView
                 android:layout_width="fill_parent"
-                android:text="or"
+                android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:layout_height="wrap_content" />
+                android:text="or" />
 
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/plus_sign_in_button"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn_fb"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#3B5998"
+                android:textColor="#FFFFFF"
+                android:text="Signup" >
+            </Button>
         </LinearLayout>
     </ScrollView>
 
