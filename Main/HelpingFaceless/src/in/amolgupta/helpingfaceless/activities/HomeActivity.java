@@ -15,6 +15,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -33,7 +34,7 @@ public class HomeActivity extends HFBaseActivity implements OnItemClickListener 
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
-	private DashboardFragment fragment;
+	private Fragment fragment;
 	private NavigationAdapter adapter;
 	private ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -48,7 +49,8 @@ public class HomeActivity extends HFBaseActivity implements OnItemClickListener 
 
 		mNavItems.add(new NavItem("Home"));
 		mNavItems.add(new NavItem("Upload Image"));
-		// mNavItems.add(new NavItem("My Pledge"));
+		mNavItems.add(new NavItem("My Pledge"));
+		mNavItems.add(new NavItem("Help"));
 		mNavItems.add(new NavItem("Sign Out"));
 
 		adapter = new NavigationAdapter(mNavItems, this);
@@ -182,6 +184,24 @@ public class HomeActivity extends HFBaseActivity implements OnItemClickListener 
 			startActivity(uploadIntent);
 			break;
 		case 2:
+			fragment = new PledgeFragment();
+			if (fragment != null) {
+				FragmentManager fragmentManager = getSupportFragmentManager();
+				fragmentManager.beginTransaction()
+						.replace(R.id.content_frame, fragment).commit();
+				mDrawerLayout.closeDrawer(mDrawerList);
+
+			} else {
+				// error in creating fragment
+				Log.e("MainActivity", "Error in creating fragment");
+			}
+			break;
+		case 3:
+			Intent helpIntent = new Intent(this, HelpActivity.class);
+			startActivity(helpIntent);
+			break;
+
+		case 4:
 			Session session = Session.getActiveSession();
 			if (!session.isClosed()) {
 				session.closeAndClearTokenInformation();

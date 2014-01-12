@@ -37,6 +37,11 @@
             android:label="@string/lbl_upload_activity" >
         </activity>
         <activity
+            android:name="in.amolgupta.helpingfaceless.activities.HelpActivity"
+            android:label="@string/title_activity_home"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
             android:name="in.amolgupta.helpingfaceless.activities.HomeActivity"
             android:label="@string/title_activity_home"
             android:windowSoftInputMode="adjustResize|stateVisible" >
