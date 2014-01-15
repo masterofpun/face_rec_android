@@ -21,6 +21,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -50,7 +51,7 @@ import com.squareup.okhttp.OkHttpClient;
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class SetupActivity extends Activity implements View.OnClickListener,
+public class SetupActivity extends ActionBarActivity implements View.OnClickListener,
 		ConnectionCallbacks, OnConnectionFailedListener {
 	/**
 	 * A dummy authentication store containing known user names and passwords.
@@ -118,6 +119,7 @@ public class SetupActivity extends Activity implements View.OnClickListener,
 						return false;
 					}
 				});
+		getSupportActionBar().hide();
 		// Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
 		// Account[] accounts = AccountManager.get(this).getAccounts();
 		// for (Account account : accounts) {

@@ -31,6 +31,12 @@
 
     <!-- Login form -->
 
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/background" />
+
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
@@ -38,6 +44,8 @@
 
         <LinearLayout
             style="@style/LoginFormContainer"
+            android:layout_gravity="bottom"
+            android:background="#99000000"
             android:orientation="vertical" >
 
             <EditText
@@ -48,7 +56,8 @@
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="test@test.com" />
+                android:textColor="#FFFFFF"
+                android:textColorHint="#ffffff" />
 
             <EditText
                 android:id="@+id/edt_phone_number"
@@ -60,8 +69,8 @@
                 android:imeOptions="actionUnspecified"
                 android:inputType="phone"
                 android:maxLines="1"
+				android:text="gsfgsg"
                 android:singleLine="true"
-                android:text="9876543210"
                 android:visibility="gone" />
 
             <Button
@@ -72,7 +81,8 @@
                 android:layout_marginTop="16dp"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"
-                android:text="@string/action_sign_in_register" />
+                android:text="@string/action_sign_in_register"
+                android:textColor="#FFFFFF" />
 
             <TextView
                 android:layout_width="fill_parent"
@@ -90,8 +100,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="#3B5998"
-                android:textColor="#FFFFFF"
-                android:text="Signup" >
+                android:drawablePadding="16dp"
+                android:drawableLeft="@drawable/facebook_icon"
+                android:text="Sign in"
+                android:textColor="#FFFFFF" >
             </Button>
         </LinearLayout>
     </ScrollView>

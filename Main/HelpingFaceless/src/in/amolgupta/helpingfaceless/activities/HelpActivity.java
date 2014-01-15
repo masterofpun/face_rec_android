@@ -8,10 +8,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 
 public class HelpActivity extends FragmentActivity {
 
-	private static final int NUM_PAGES = 5;
+	public static final int NUM_PAGES = 5;
 	private ViewPager mPager;
 	private PagerAdapter mPagerAdapter;
 
@@ -50,7 +51,7 @@ public class HelpActivity extends FragmentActivity {
 
 		@Override
 		public Fragment getItem(int position) {
-			return new HelpItemFragment();
+			return new HelpItemFragment(position);
 		}
 
 		@Override
