@@ -26,6 +26,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -57,6 +59,9 @@ public class UploadForm extends HFBaseActivity implements OnClickListener {
 		mTryAgain.setOnClickListener(this);
 
 		mUploadButton.setOnClickListener(this);
+		
+		LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		Location l=lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 		takePhoto();
 
 	}

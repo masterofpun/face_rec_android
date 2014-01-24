@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/backgroundTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eedddddd"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -11,9 +11,9 @@
         android:orientation="vertical" >
 
         <TextView
+            style="@style/smallText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
             android:gravity="center"
             android:padding="8dp"
             android:singleLine="false"
@@ -53,6 +53,7 @@
                 </LinearLayout>
 
                 <TextView
+                    style="@style/smallText"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
@@ -69,22 +70,12 @@
 
                     <Button
                         android:id="@+id/btn_positive"
+                        style="@style/blue"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight=".3"
                         android:adjustViewBounds="true"
-                        android:background="#6666FF"
-                        android:text="Yes"
-                        android:textColor="#FFFFFF" />
-
-                    <Button
-                        android:id="@+id/btn_negitive"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight=".3"
-                        android:adjustViewBounds="true"
-                        android:background="#666666"
-                        android:text="No"
+                        android:text="@string/yes"
                         android:textColor="#FFFFFF" />
 
                     <Button
@@ -93,8 +84,18 @@
                         android:layout_height="fill_parent"
                         android:layout_weight=".3"
                         android:adjustViewBounds="true"
-                        android:background="#FF6666"
-                        android:text="Cant Say"
+                        android:background="#666666"
+                        android:text="@string/cant_say"
+                        android:textColor="#FFFFFF" />
+
+                    <Button
+                        android:id="@+id/btn_negitive"
+                        style="@style/rebButton"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight=".3"
+                        android:adjustViewBounds="true"
+                        android:text="@string/no"
                         android:textColor="#FFFFFF" />
                 </LinearLayout>
             </LinearLayout>
@@ -106,28 +107,36 @@
             android:orientation="vertical"
             android:padding="8dp" >
 
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="16dp"
+                android:background="#FFFFFF" />
+
             <TextView
                 android:id="@+id/txt_dash_new_title"
+                style="@style/smallText"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="Saw a lost child?"
+                android:text="@string/saw_a_lost_child"
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
             <TextView
+                style="@style/smallText"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:singleLine="false"
-                android:text="Upload their picture and we may help them back to their home" />
+                android:text="@string/upload_their_picture_and_we_may_help_them_back_to_their_home" />
 
             <Button
                 android:id="@+id/btn_upload"
+                style="@style/blue"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:layout_margin="8dp"
-                android:background="#6666FF"
                 android:text="@string/lbl_dash_new"
                 android:textColor="#FFFFFF" />
         </LinearLayout>

@@ -69,8 +69,8 @@
                 android:imeOptions="actionUnspecified"
                 android:inputType="phone"
                 android:maxLines="1"
-				android:text="gsfgsg"
                 android:singleLine="true"
+                android:text="gsfgsg"
                 android:visibility="gone" />
 
             <Button
@@ -97,11 +97,11 @@
 
             <Button
                 android:id="@+id/btn_fb"
+                style="@style/blue"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="#3B5998"
-                android:drawablePadding="16dp"
                 android:drawableLeft="@drawable/facebook_icon"
+                android:drawablePadding="16dp"
                 android:text="Sign in"
                 android:textColor="#FFFFFF" >
             </Button>

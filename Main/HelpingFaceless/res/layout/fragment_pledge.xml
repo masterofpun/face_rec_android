@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/in.amolgupta.helpingfaceless"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     android:orientation="vertical" >
 
-    <de.passsy.holocircularprogressbar.HoloCircularProgressBar
-        android:id="@+id/holoCircularProgressBar1"
-        android:layout_width="wrap_content" 
-        android:layout_height="wrap_content"/>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:src="@drawable/candle" />
+
+        <de.passsy.holocircularprogressbar.HoloCircularProgressBar
+            android:id="@+id/holoCircularProgressBar1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            app:marker_visible="true"
+            app:progress=".7"
+            app:progress_background_color="#333333"
+            app:progress_color="#EDE275"
+            app:thumb_visible="true" />
+    </FrameLayout>
 
 </LinearLayout>
