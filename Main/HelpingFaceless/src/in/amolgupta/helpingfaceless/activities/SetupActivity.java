@@ -7,6 +7,7 @@ import in.amolgupta.helpingfaceless.utils.RequestUtils;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -476,8 +477,8 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
 	private void onClickLogin() {
 		Session session = Session.getActiveSession();
 		if (!session.isOpened() && !session.isClosed()) {
-			session.openForRead(new Session.OpenRequest(this)
-					.setCallback(statusCallback));
+			session.openForRead(new Session.OpenRequest(this)	
+					.setCallback(statusCallback).setPermissions(Arrays.asList("email")));
 		} else {
 			Session.openActiveSession(this, true, statusCallback);
 		}

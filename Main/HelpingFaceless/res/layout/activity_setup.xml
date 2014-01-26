@@ -56,6 +56,7 @@
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:singleLine="true"
+                android:visibility="gone"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#ffffff" />
 
@@ -81,6 +82,7 @@
                 android:layout_marginTop="16dp"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"
+                android:visibility="gone"
                 android:text="@string/action_sign_in_register"
                 android:textColor="#FFFFFF" />
 
@@ -93,6 +95,7 @@
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/plus_sign_in_button"
                 android:layout_width="fill_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content" />
 
             <Button

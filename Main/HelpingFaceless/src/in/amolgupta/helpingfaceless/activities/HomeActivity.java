@@ -6,8 +6,6 @@ import in.amolgupta.helpingfaceless.entities.NavItem;
 
 import java.util.ArrayList;
 
-import com.facebook.Session;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -30,7 +29,15 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class HomeActivity extends HFBaseActivity implements OnItemClickListener {
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphUser;
+import com.facebook.widget.ProfilePictureView;
+import com.facebook.widget.WebDialog;
+
+public class HomeActivity extends HFBaseActivity implements
+		OnItemClickListener, OnClickListener {
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -38,6 +45,11 @@ public class HomeActivity extends HFBaseActivity implements OnItemClickListener 
 	private NavigationAdapter adapter;
 	private ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
 	private ActionBarDrawerToggle mDrawerToggle;
+	private ProfilePictureView profileImage;
+	private TextView profileName;
+	private TextView uploadButton;
+	private TextView InviteButton;
+	private TextView SignOut;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,12 +58,25 @@ public class HomeActivity extends HFBaseActivity implements OnItemClickListener 
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
+		View profileView = LayoutInflater.from(this).inflate(
+				R.layout.profile_view, mDrawerList, false);
+		profileImage = (ProfilePictureView) profileView
+				.findViewById(R.id.profile_pic);
+		profileName = (TextView) profileView
+				.findViewById(R.id.txt_profile_name);
+		uploadButton = (TextView) profileView
+				.findViewById(R.id.txt_upload_image);
+		InviteButton = (TextView) profileView
+				.findViewById(R.id.txt_invite_friends);
+		SignOut = (TextView) profileView.findViewById(R.id.txt_sign_out);
+		SignOut.setOnClickListener(this);
+		uploadButton.setOnClickListener(this);
+		InviteButton.setOnClickListener(this);
+		mDrawerList.addHeaderView(profileView);
+		makeMeRequest(Session.getActiveSession());
 		mNavItems.add(new NavItem("Home"));
-		mNavItems.add(new NavItem("Upload Image"));
-		mNavItems.add(new NavItem("My Pledge"));
-		mNavItems.add(new NavItem("Help"));
-		mNavItems.add(new NavItem("Sign Out"));
+		// mNavItems.add(new NavItem("My Pledge"));
+		// mNavItems.add(new NavItem("Help"));
 
 		adapter = new NavigationAdapter(mNavItems, this);
 		mDrawerList.setAdapter(adapter);
@@ -88,7 +113,7 @@ public class HomeActivity extends HFBaseActivity implements OnItemClickListener 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 
-		mDrawerList.setOnItemClickListener(this);
+		// mDrawerList.setOnItemClickListener(this);
 
 	}
 
@@ -180,10 +205,8 @@ public class HomeActivity extends HFBaseActivity implements OnItemClickListener 
 			}
 			break;
 		case 1:
-			Intent uploadIntent = new Intent(this, UploadForm.class);
-			startActivity(uploadIntent);
-			break;
-		case 2:
+
+		case 98:
 			fragment = new PledgeFragment();
 			if (fragment != null) {
 				FragmentManager fragmentManager = getSupportFragmentManager();
@@ -196,12 +219,69 @@ public class HomeActivity extends HFBaseActivity implements OnItemClickListener 
 				Log.e("MainActivity", "Error in creating fragment");
 			}
 			break;
-		case 3:
+		case 99:
 			Intent helpIntent = new Intent(this, HelpActivity.class);
 			startActivity(helpIntent);
 			break;
 
-		case 4:
+		default:
+			fragment = new DashboardFragment();
+			if (fragment != null) {
+				FragmentManager fragmentManager = getSupportFragmentManager();
+				fragmentManager.beginTransaction()
+						.replace(R.id.content_frame, fragment).commit();
+				mDrawerLayout.closeDrawer(mDrawerList);
+
+			} else {
+				// error in creating fragment
+				Log.e("MainActivity", "Error in creating fragment");
+			}
+			break;
+		}
+
+	}
+
+	private void makeMeRequest(final Session session) {
+		// Make an API call to get user data and define a
+		// new callback to handle the response.
+		Request request = Request.newMeRequest(session,
+				new Request.GraphUserCallback() {
+					@Override
+					public void onCompleted(GraphUser user, Response response) {
+						// If the response is successful
+						if (session == Session.getActiveSession()) {
+							if (user != null) {
+								// Set the id for the ProfilePictureView
+								// view that in turn displays the profile
+								// picture.
+								profileImage.setProfileId(user.getId());
+								// Set the Textview's text to the user's name.
+								profileName.setText(user.getName());
+							}
+						}
+						if (response.getError() != null) {
+							// Handle errors, will do so later.
+						}
+					}
+				});
+		request.executeAsync();
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.txt_invite_friends:
+			WebDialog requestsDialog = (new WebDialog.RequestsDialogBuilder(
+					HomeActivity.this, Session.getActiveSession(), null))
+					.build();
+			requestsDialog.show();
+
+			break;
+		case R.id.txt_upload_image:
+			Intent uploadIntent = new Intent(this, UploadForm.class);
+			startActivity(uploadIntent);
+			break;
+		case R.id.txt_sign_out:
 			Session session = Session.getActiveSession();
 			if (!session.isClosed()) {
 				session.closeAndClearTokenInformation();
@@ -219,20 +299,9 @@ public class HomeActivity extends HFBaseActivity implements OnItemClickListener 
 					SetupActivity.class);
 			startActivity(loginIntent);
 			finish();
-
-		default:
-			fragment = new DashboardFragment();
-			if (fragment != null) {
-				FragmentManager fragmentManager = getSupportFragmentManager();
-				fragmentManager.beginTransaction()
-						.replace(R.id.content_frame, fragment).commit();
-				mDrawerLayout.closeDrawer(mDrawerList);
-
-			} else {
-				// error in creating fragment
-				Log.e("MainActivity", "Error in creating fragment");
-			}
 			break;
+		default:
+
 		}
 
 	}
