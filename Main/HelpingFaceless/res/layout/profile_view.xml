@@ -26,6 +26,21 @@
             android:paddingLeft="16dp" />
     </LinearLayout>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="#122A0A"
+        android:padding="8dp" />
+
+    <TextView
+        android:id="@+id/txt_home"
+        style="@style/smallText"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="@string/home" />
+
     <TextView
         android:id="@+id/txt_upload_image"
         style="@style/smallText"
@@ -42,13 +57,12 @@
         android:gravity="center_vertical"
         android:text="@string/invite_friends" />
 
-        <TextView
+    <TextView
         android:id="@+id/txt_sign_out"
         style="@style/smallText"
         android:layout_width="fill_parent"
         android:layout_height="48dp"
         android:gravity="center_vertical"
         android:text="@string/signout" />
-    
-    
+
 </LinearLayout>

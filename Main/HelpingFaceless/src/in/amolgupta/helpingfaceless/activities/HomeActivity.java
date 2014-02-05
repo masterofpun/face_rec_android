@@ -23,21 +23,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.FacebookException;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.ProfilePictureView;
 import com.facebook.widget.WebDialog;
+import com.facebook.widget.WebDialog.OnCompleteListener;
 
-public class HomeActivity extends HFBaseActivity implements
-		OnItemClickListener, OnClickListener {
+public class HomeActivity extends HFBaseActivity implements OnClickListener {
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -50,6 +51,7 @@ public class HomeActivity extends HFBaseActivity implements
 	private TextView uploadButton;
 	private TextView InviteButton;
 	private TextView SignOut;
+	private TextView HomeButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,13 +70,17 @@ public class HomeActivity extends HFBaseActivity implements
 				.findViewById(R.id.txt_upload_image);
 		InviteButton = (TextView) profileView
 				.findViewById(R.id.txt_invite_friends);
+		HomeButton = (TextView) profileView.findViewById(R.id.txt_home);
 		SignOut = (TextView) profileView.findViewById(R.id.txt_sign_out);
 		SignOut.setOnClickListener(this);
 		uploadButton.setOnClickListener(this);
 		InviteButton.setOnClickListener(this);
+		HomeButton.setOnClickListener(this);
 		mDrawerList.addHeaderView(profileView);
 		makeMeRequest(Session.getActiveSession());
-		mNavItems.add(new NavItem("Home"));
+		getWindow().setSoftInputMode(
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		// mNavItems.add(new NavItem("Home"));
 		// mNavItems.add(new NavItem("My Pledge"));
 		// mNavItems.add(new NavItem("Help"));
 
@@ -187,59 +193,60 @@ public class HomeActivity extends HFBaseActivity implements
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		switch (arg2) {
-
-		case 0:
-			fragment = new DashboardFragment();
-			if (fragment != null) {
-				FragmentManager fragmentManager = getSupportFragmentManager();
-				fragmentManager.beginTransaction()
-						.replace(R.id.content_frame, fragment).commit();
-				mDrawerLayout.closeDrawer(mDrawerList);
-
-			} else {
-				// error in creating fragment
-				Log.e("MainActivity", "Error in creating fragment");
-			}
-			break;
-		case 1:
-
-		case 98:
-			fragment = new PledgeFragment();
-			if (fragment != null) {
-				FragmentManager fragmentManager = getSupportFragmentManager();
-				fragmentManager.beginTransaction()
-						.replace(R.id.content_frame, fragment).commit();
-				mDrawerLayout.closeDrawer(mDrawerList);
-
-			} else {
-				// error in creating fragment
-				Log.e("MainActivity", "Error in creating fragment");
-			}
-			break;
-		case 99:
-			Intent helpIntent = new Intent(this, HelpActivity.class);
-			startActivity(helpIntent);
-			break;
-
-		default:
-			fragment = new DashboardFragment();
-			if (fragment != null) {
-				FragmentManager fragmentManager = getSupportFragmentManager();
-				fragmentManager.beginTransaction()
-						.replace(R.id.content_frame, fragment).commit();
-				mDrawerLayout.closeDrawer(mDrawerList);
-
-			} else {
-				// error in creating fragment
-				Log.e("MainActivity", "Error in creating fragment");
-			}
-			break;
-		}
-
-	}
+	// @Override
+	// public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long
+	// arg3) {
+	// switch (arg2) {
+	//
+	// case 0:
+	// fragment = new DashboardFragment();
+	// if (fragment != null) {
+	// FragmentManager fragmentManager = getSupportFragmentManager();
+	// fragmentManager.beginTransaction()
+	// .replace(R.id.content_frame, fragment).commit();
+	// mDrawerLayout.closeDrawer(mDrawerList);
+	//
+	// } else {
+	// // error in creating fragment
+	// Log.e("MainActivity", "Error in creating fragment");
+	// }
+	// break;
+	// case 1:
+	//
+	// case 98:
+	// fragment = new PledgeFragment();
+	// if (fragment != null) {
+	// FragmentManager fragmentManager = getSupportFragmentManager();
+	// fragmentManager.beginTransaction()
+	// .replace(R.id.content_frame, fragment).commit();
+	// mDrawerLayout.closeDrawer(mDrawerList);
+	//
+	// } else {
+	// // error in creating fragment
+	// Log.e("MainActivity", "Error in creating fragment");
+	// }
+	// break;
+	// case 99:
+	// Intent helpIntent = new Intent(this, HelpActivity.class);
+	// startActivity(helpIntent);
+	// break;
+	//
+	// default:
+	// fragment = new DashboardFragment();
+	// if (fragment != null) {
+	// FragmentManager fragmentManager = getSupportFragmentManager();
+	// fragmentManager.beginTransaction()
+	// .replace(R.id.content_frame, fragment).commit();
+	// mDrawerLayout.closeDrawer(mDrawerList);
+	//
+	// } else {
+	// // error in creating fragment
+	// Log.e("MainActivity", "Error in creating fragment");
+	// }
+	// break;
+	// }
+	//
+	// }
 
 	private void makeMeRequest(final Session session) {
 		// Make an API call to get user data and define a
@@ -270,12 +277,21 @@ public class HomeActivity extends HFBaseActivity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.txt_invite_friends:
-			WebDialog requestsDialog = (new WebDialog.RequestsDialogBuilder(
-					HomeActivity.this, Session.getActiveSession(), null))
-					.build();
-			requestsDialog.show();
+		case R.id.txt_home:
+			fragment = new DashboardFragment();
+			if (fragment != null) {
+				FragmentManager fragmentManager = getSupportFragmentManager();
+				fragmentManager.beginTransaction()
+						.replace(R.id.content_frame, fragment).commit();
+				mDrawerLayout.closeDrawer(mDrawerList);
 
+			} else {
+				// error in creating fragment
+				Log.e("MainActivity", "Error in creating fragment");
+			}
+			break;
+		case R.id.txt_invite_friends:
+			sendRequestDialog();
 			break;
 		case R.id.txt_upload_image:
 			Intent uploadIntent = new Intent(this, UploadForm.class);
@@ -304,5 +320,32 @@ public class HomeActivity extends HFBaseActivity implements
 
 		}
 
+	}
+	private void sendRequestDialog() {
+	    Bundle params = new Bundle();
+	    params.putString("message", "Help me find missing people.");
+	    WebDialog requestsDialog = (
+	        new WebDialog.RequestsDialogBuilder(HomeActivity.this,
+	            Session.getActiveSession(),
+	            params))
+	            .setOnCompleteListener(new OnCompleteListener() {
+
+	                @Override
+	                public void onComplete(Bundle values,
+	                    FacebookException error) {
+	                    if (values!=null && values.getString("request") != null) {
+	                        Toast.makeText(HomeActivity.this.getApplicationContext(), 
+	                            "Request sent",  
+	                            Toast.LENGTH_SHORT).show();
+	                    } else {
+	                        Toast.makeText(HomeActivity.this.getApplicationContext(), 
+	                            "Request cancelled", 
+	                            Toast.LENGTH_SHORT).show();
+	                    }
+	                }
+
+	            })
+	            .build();
+	    requestsDialog.show();
 	}
 }

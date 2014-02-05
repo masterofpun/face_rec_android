@@ -4,10 +4,13 @@ import in.amolgupta.helpingfaceless.R;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
@@ -15,10 +18,13 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+
+import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.app.NotificationManager;
@@ -49,6 +55,7 @@ public class UploadForm extends HFBaseActivity implements OnClickListener {
 	private static final int TAKE_PICTURE = 85;
 	private Uri imageUri;
 	private Uri selectedImage;
+	private Location location;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +66,10 @@ public class UploadForm extends HFBaseActivity implements OnClickListener {
 		mTryAgain.setOnClickListener(this);
 
 		mUploadButton.setOnClickListener(this);
-		
-		LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		Location l=lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+		LocationManager lm = (LocationManager) this
+				.getSystemService(Context.LOCATION_SERVICE);
+		location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 		takePhoto();
 
 	}
@@ -120,7 +128,7 @@ public class UploadForm extends HFBaseActivity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btn_upload_to_server:
-			UploadTask upload = new UploadTask(selectedImage);
+			UploadTask upload = new UploadTask(selectedImage, location);
 			upload.execute();
 			finish();
 			break;
@@ -135,7 +143,7 @@ public class UploadForm extends HFBaseActivity implements OnClickListener {
 		private NotificationManager mNotifyManager;
 		private android.support.v4.app.NotificationCompat.Builder mBuilder;
 
-		public UploadTask(Uri image) {
+		public UploadTask(Uri image, Location location) {
 			this.imageUri = image;
 			HttpParams params = new BasicHttpParams();
 			params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
@@ -160,6 +168,9 @@ public class UploadForm extends HFBaseActivity implements OnClickListener {
 
 				MultipartEntity multipartEntity = new MultipartEntity(
 						HttpMultipartMode.BROWSER_COMPATIBLE);
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+						1);
+				nameValuePairs.add(new BasicNameValuePair("location_attributes", new Gson().toJson(location)));
 				// multipartEntity.addPart("Title", new StringBody("Title"));
 				// multipartEntity.addPart("Nick", new StringBody("Nick"));
 				// multipartEntity.addPart("Email", new StringBody("Email"));
