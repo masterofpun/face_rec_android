@@ -10,29 +10,50 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class HomeActivity extends HFBaseActivity implements
-		OnItemClickListener {
+import com.facebook.FacebookException;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphUser;
+import com.facebook.widget.ProfilePictureView;
+import com.facebook.widget.WebDialog;
+import com.facebook.widget.WebDialog.OnCompleteListener;
+
+public class HomeActivity extends HFBaseActivity implements OnClickListener {
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
-	private DashboardFragment fragment;
+	private Fragment fragment;
 	private NavigationAdapter adapter;
 	private ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
+	private ActionBarDrawerToggle mDrawerToggle;
+	private ProfilePictureView profileImage;
+	private TextView profileName;
+	private TextView uploadButton;
+	private TextView InviteButton;
+	private TextView SignOut;
+	private TextView HomeButton;
+	private TextView RateUsText;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,15 +62,34 @@ public class HomeActivity extends HFBaseActivity implements
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-		mNavItems.add(new NavItem("Home"));
-		mNavItems.add(new NavItem("Upload Image"));
-		mNavItems.add(new NavItem("My Pledge"));
-		mNavItems.add(new NavItem("Sign Out"));
+		View profileView = LayoutInflater.from(this).inflate(
+				R.layout.profile_view, mDrawerList, false);
+		profileImage = (ProfilePictureView) profileView
+				.findViewById(R.id.profile_pic);
+		profileName = (TextView) profileView
+				.findViewById(R.id.txt_profile_name);
+		uploadButton = (TextView) profileView
+				.findViewById(R.id.txt_upload_image);
+		InviteButton = (TextView) profileView
+				.findViewById(R.id.txt_invite_friends);
+		HomeButton = (TextView) profileView.findViewById(R.id.txt_home);
+		SignOut = (TextView) profileView.findViewById(R.id.txt_sign_out);
+		RateUsText = (TextView) profileView.findViewById(R.id.txt_rate_us);
+		SignOut.setOnClickListener(this);
+		uploadButton.setOnClickListener(this);
+		InviteButton.setOnClickListener(this);
+		HomeButton.setOnClickListener(this);
+		RateUsText.setOnClickListener(this);
+		mDrawerList.addHeaderView(profileView);
+		makeMeRequest(Session.getActiveSession());
+		getWindow().setSoftInputMode(
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		// mNavItems.add(new NavItem("Home"));
+		// mNavItems.add(new NavItem("My Pledge"));
+		// mNavItems.add(new NavItem("Help"));
 
 		adapter = new NavigationAdapter(mNavItems, this);
 		mDrawerList.setAdapter(adapter);
-		mDrawerList.setOnItemClickListener(this);
 		fragment = new DashboardFragment();
 		if (fragment != null) {
 			FragmentManager fragmentManager = getSupportFragmentManager();
@@ -61,6 +101,37 @@ public class HomeActivity extends HFBaseActivity implements
 			// error in creating fragment
 			Log.e("MainActivity", "Error in creating fragment");
 		}
+		mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
+		mDrawerLayout, /* DrawerLayout object */
+		R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
+		R.string.drawer_open, /* "open drawer" description */
+		R.string.drawer_close /* "close drawer" description */
+		) {
+
+			/** Called when a drawer has settled in a completely closed state. */
+			public void onDrawerClosed(View view) {
+			}
+
+			/** Called when a drawer has settled in a completely open state. */
+			public void onDrawerOpened(View drawerView) {
+			}
+		};
+
+		// Set the drawer toggle as the DrawerListener
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+
+		// mDrawerList.setOnItemClickListener(this);
+
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
 	}
 
 	@Override
@@ -109,10 +180,108 @@ public class HomeActivity extends HFBaseActivity implements
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		switch (arg2) {
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Pass the event to ActionBarDrawerToggle, if it returns
+		// true, then it has handled the app icon touch event
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+		// Handle your other action bar items...
 
-		case 0:
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	// @Override
+	// public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long
+	// arg3) {
+	// switch (arg2) {
+	//
+	// case 0:
+	// fragment = new DashboardFragment();
+	// if (fragment != null) {
+	// FragmentManager fragmentManager = getSupportFragmentManager();
+	// fragmentManager.beginTransaction()
+	// .replace(R.id.content_frame, fragment).commit();
+	// mDrawerLayout.closeDrawer(mDrawerList);
+	//
+	// } else {
+	// // error in creating fragment
+	// Log.e("MainActivity", "Error in creating fragment");
+	// }
+	// break;
+	// case 1:
+	//
+	// case 98:
+	// fragment = new PledgeFragment();
+	// if (fragment != null) {
+	// FragmentManager fragmentManager = getSupportFragmentManager();
+	// fragmentManager.beginTransaction()
+	// .replace(R.id.content_frame, fragment).commit();
+	// mDrawerLayout.closeDrawer(mDrawerList);
+	//
+	// } else {
+	// // error in creating fragment
+	// Log.e("MainActivity", "Error in creating fragment");
+	// }
+	// break;
+	// case 99:
+	// Intent helpIntent = new Intent(this, HelpActivity.class);
+	// startActivity(helpIntent);
+	// break;
+	//
+	// default:
+	// fragment = new DashboardFragment();
+	// if (fragment != null) {
+	// FragmentManager fragmentManager = getSupportFragmentManager();
+	// fragmentManager.beginTransaction()
+	// .replace(R.id.content_frame, fragment).commit();
+	// mDrawerLayout.closeDrawer(mDrawerList);
+	//
+	// } else {
+	// // error in creating fragment
+	// Log.e("MainActivity", "Error in creating fragment");
+	// }
+	// break;
+	// }
+	//
+	// }
+
+	private void makeMeRequest(final Session session) {
+		// Make an API call to get user data and define a
+		// new callback to handle the response.
+		Request request = Request.newMeRequest(session,
+				new Request.GraphUserCallback() {
+					@Override
+					public void onCompleted(GraphUser user, Response response) {
+						// If the response is successful
+						if (session == Session.getActiveSession()) {
+							if (user != null) {
+								// Set the id for the ProfilePictureView
+								// view that in turn displays the profile
+								// picture.
+								profileImage.setProfileId(user.getId());
+								// Set the Textview's text to the user's name.
+								profileName.setText(user.getName());
+							}
+						}
+						if (response.getError() != null) {
+							// Handle errors, will do so later.
+						}
+					}
+				});
+		request.executeAsync();
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.txt_home:
 			fragment = new DashboardFragment();
 			if (fragment != null) {
 				FragmentManager fragmentManager = getSupportFragmentManager();
@@ -125,12 +294,26 @@ public class HomeActivity extends HFBaseActivity implements
 				Log.e("MainActivity", "Error in creating fragment");
 			}
 			break;
-		case 1:
+		case R.id.txt_invite_friends:
+			sendRequestDialog();
+			break;
+		case R.id.txt_rate_us:
+			Intent marketIntent = new Intent(Intent.ACTION_VIEW,
+					Uri.parse("market://details?id=in.amolgupta.helpingfaceless" ));
+			marketIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY
+					| Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET
+					| Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+			startActivity(marketIntent);
+			break;
+		case R.id.txt_upload_image:
 			Intent uploadIntent = new Intent(this, UploadForm.class);
 			startActivity(uploadIntent);
-		case 2:
 			break;
-		case 3:
+		case R.id.txt_sign_out:
+			Session session = Session.getActiveSession();
+			if (!session.isClosed()) {
+				session.closeAndClearTokenInformation();
+			}
 			SharedPreferences pref = getApplicationContext()
 					.getSharedPreferences("MyPref", 0); // 0 - for private
 														// mode
@@ -144,21 +327,37 @@ public class HomeActivity extends HFBaseActivity implements
 					SetupActivity.class);
 			startActivity(loginIntent);
 			finish();
-
-		default:
-			fragment = new DashboardFragment();
-			if (fragment != null) {
-				FragmentManager fragmentManager = getSupportFragmentManager();
-				fragmentManager.beginTransaction()
-						.replace(R.id.content_frame, fragment).commit();
-				mDrawerLayout.closeDrawer(mDrawerList);
-
-			} else {
-				// error in creating fragment
-				Log.e("MainActivity", "Error in creating fragment");
-			}
 			break;
+		default:
+
 		}
 
+	}
+
+	private void sendRequestDialog() {
+		Bundle params = new Bundle();
+		params.putString("message", "Help me find missing people.");
+		WebDialog requestsDialog = (new WebDialog.RequestsDialogBuilder(
+				HomeActivity.this, Session.getActiveSession(), params))
+				.setOnCompleteListener(new OnCompleteListener() {
+
+					@Override
+					public void onComplete(Bundle values,
+							FacebookException error) {
+						if (values != null
+								&& values.getString("request") != null) {
+							Toast.makeText(
+									HomeActivity.this.getApplicationContext(),
+									"Request sent", Toast.LENGTH_SHORT).show();
+						} else {
+							Toast.makeText(
+									HomeActivity.this.getApplicationContext(),
+									"Request cancelled", Toast.LENGTH_SHORT)
+									.show();
+						}
+					}
+
+				}).build();
+		requestsDialog.show();
 	}
 }

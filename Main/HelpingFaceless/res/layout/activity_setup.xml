@@ -31,6 +31,12 @@
 
     <!-- Login form -->
 
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/background" />
+
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
@@ -38,6 +44,8 @@
 
         <LinearLayout
             style="@style/LoginFormContainer"
+            android:layout_gravity="bottom"
+            android:background="#99000000"
             android:orientation="vertical" >
 
             <EditText
@@ -48,7 +56,9 @@
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="test@test.com" />
+                android:visibility="gone"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#ffffff" />
 
             <EditText
                 android:id="@+id/edt_phone_number"
@@ -61,7 +71,7 @@
                 android:inputType="phone"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="9876543210"
+                android:text="gsfgsg"
                 android:visibility="gone" />
 
             <Button
@@ -72,7 +82,32 @@
                 android:layout_marginTop="16dp"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"
-                android:text="@string/action_sign_in_register" />
+                android:visibility="gone"
+                android:text="@string/action_sign_in_register"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="or" />
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/plus_sign_in_button"
+                android:layout_width="fill_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn_fb"
+                style="@style/blue"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/facebook_icon"
+                android:drawablePadding="16dp"
+                android:text="Sign in"
+                android:textColor="#FFFFFF" >
+            </Button>
         </LinearLayout>
     </ScrollView>
 

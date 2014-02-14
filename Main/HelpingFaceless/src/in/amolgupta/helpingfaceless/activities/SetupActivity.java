@@ -7,36 +7,53 @@ import in.amolgupta.helpingfaceless.utils.RequestUtils;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.LoggingBehavior;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.Settings;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
+import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.plus.PlusClient;
 import com.squareup.okhttp.OkHttpClient;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class SetupActivity extends Activity {
+public class SetupActivity extends ActionBarActivity implements View.OnClickListener,
+		ConnectionCallbacks, OnConnectionFailedListener {
 	/**
 	 * A dummy authentication store containing known user names and passwords.
 	 * TODO: remove after connecting to a real authentication system.
@@ -64,6 +81,14 @@ public class SetupActivity extends Activity {
 	private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
+	private SignInButton GPlusSigninButton;
+	private static final String TAG = "ExampleActivity";
+	private static final int REQUEST_CODE_RESOLVE_ERR = 9000;
+	private Button facebookButton;
+	private ProgressDialog mConnectionProgressDialog;
+	private PlusClient mPlusClient;
+	private ConnectionResult mConnectionResult;
+	private Session.StatusCallback statusCallback = new SessionStatusCallback();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +99,9 @@ public class SetupActivity extends Activity {
 		// Set up the login form.
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
+		GPlusSigninButton = (SignInButton) findViewById(R.id.plus_sign_in_button);
+		facebookButton = (Button) findViewById(R.id.btn_fb);
+		facebookButton.setOnClickListener(this);
 		mEmailView.setText(mEmail);
 		mEmailView.requestFocus();
 		InputMethodManager inputManager = (InputMethodManager) this
@@ -92,6 +120,7 @@ public class SetupActivity extends Activity {
 						return false;
 					}
 				});
+		getSupportActionBar().hide();
 		// Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
 		// Account[] accounts = AccountManager.get(this).getAccounts();
 		// for (Account account : accounts) {
@@ -119,12 +148,39 @@ public class SetupActivity extends Activity {
 				"MyPref", 0); // 0 - for private
 								// mode
 		if (pref.getBoolean("isLoggedIn", false)) {
-			Constants.mIsLoggedIN=true;
+			Constants.mIsLoggedIN = true;
 			Intent mDashBoardIntent = new Intent(SetupActivity.this,
 					HomeActivity.class);
 			startActivity(mDashBoardIntent);
 			finish();
 
+		}
+		GPlusSigninButton.setOnClickListener(this);
+		mPlusClient = new PlusClient.Builder(this, this, this)
+				.setActions(
+
+				"http://schemas.google.com/BuyActivity")
+				.setScopes(Scopes.PLUS_LOGIN,
+						"https://www.googleapis.com/auth/userinfo.email")
+				.build();
+		mConnectionProgressDialog = new ProgressDialog(this);
+		mConnectionProgressDialog.setMessage("Signing in...");
+		Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
+
+		Session session = Session.getActiveSession();
+		if (session == null) {
+			if (savedInstanceState != null) {
+				session = Session.restoreSession(this, null, statusCallback,
+						savedInstanceState);
+			}
+			if (session == null) {
+				session = new Session(this);
+			}
+			Session.setActiveSession(session);
+			if (session.getState().equals(SessionState.CREATED_TOKEN_LOADED)) {
+				session.openForRead(new Session.OpenRequest(this)
+						.setCallback(statusCallback));
+			}
 		}
 	}
 
@@ -315,6 +371,148 @@ public class SetupActivity extends Activity {
 		protected void onCancelled() {
 			mAuthTask = null;
 			showProgress(false);
+		}
+	}
+
+	@Override
+	public void onClick(View view) {
+		if (view.getId() == R.id.plus_sign_in_button
+				&& !mPlusClient.isConnected()) {
+			if (mConnectionResult == null) {
+				mPlusClient.connect();
+				mConnectionProgressDialog.show();
+			} else {
+				try {
+					mConnectionResult.startResolutionForResult(this,
+							REQUEST_CODE_RESOLVE_ERR);
+				} catch (SendIntentException e) {
+					// Try connecting again.
+					mConnectionResult = null;
+					mPlusClient.connect();
+				}
+			}
+		}
+		if (view.getId() == R.id.btn_fb) {
+			onClickLogin();
+		}
+	}
+
+	@Override
+	public void onConnected(Bundle connectionHint) {
+		mConnectionProgressDialog.dismiss();
+		mPlusClient.getAccountName();
+		Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Session.getActiveSession().addCallback(statusCallback);
+
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		// mPlusClient.disconnect();
+		Session.getActiveSession().removeCallback(statusCallback);
+
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult result) {
+		if (mConnectionProgressDialog.isShowing()) {
+			// The user clicked the sign-in button already. Start to resolve
+			// connection errors. Wait until onConnected() to dismiss the
+			// connection dialog.
+			if (result.hasResolution()) {
+				try {
+					result.startResolutionForResult(this,
+							REQUEST_CODE_RESOLVE_ERR);
+				} catch (SendIntentException e) {
+					mPlusClient.connect();
+				}
+			}
+		}
+		// Save the result and resolve the connection failure upon a user click.
+		mConnectionResult = result;
+	}
+
+	private void updateView() {
+		Session session = Session.getActiveSession();
+		if (session.isOpened()) {
+			SharedPreferences pref = getApplicationContext()
+					.getSharedPreferences("MyPref", 0); // 0 - for private
+														// mode
+			Editor editor = pref.edit();
+
+			editor.putString("session", "string value"); // Storing string
+			editor.putBoolean("isLoggedIn", true); // Storing string
+
+			editor.commit(); // commit changes
+
+			Constants.mIsLoggedIN = true;
+			Intent mDashBoardIntent = new Intent(SetupActivity.this,
+					HomeActivity.class);
+			startActivity(mDashBoardIntent);
+			finish();
+		
+		} else {
+			facebookButton.setText("login");
+			facebookButton.setOnClickListener(new OnClickListener() {
+				public void onClick(View view) {
+					onClickLogin();
+				}
+			});
+		}
+	}
+
+	private void onClickLogout() {
+		Session session = Session.getActiveSession();
+		if (!session.isClosed()) {
+			session.closeAndClearTokenInformation();
+		}
+	}
+
+	private void onClickLogin() {
+		Session session = Session.getActiveSession();
+		if (!session.isOpened() && !session.isClosed()) {
+			session.openForRead(new Session.OpenRequest(this)	
+					.setCallback(statusCallback).setPermissions(Arrays.asList("email")));
+		} else {
+			Session.openActiveSession(this, true, statusCallback);
+		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		Session session = Session.getActiveSession();
+		Session.saveSession(session, outState);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int responseCode,
+			Intent intent) {
+		if (requestCode == REQUEST_CODE_RESOLVE_ERR
+				&& responseCode == RESULT_OK) {
+			mConnectionResult = null;
+			mPlusClient.connect();
+		}
+		Session.getActiveSession().onActivityResult(this, requestCode,
+				responseCode, intent);
+	}
+
+	@Override
+	public void onDisconnected() {
+		Log.d(TAG, "disconnected");
+	}
+
+	private class SessionStatusCallback implements Session.StatusCallback {
+		@Override
+		public void call(Session session, SessionState state,
+				Exception exception) {
+			updateView();
 		}
 	}
 }

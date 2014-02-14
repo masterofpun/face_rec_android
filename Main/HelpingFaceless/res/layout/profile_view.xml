@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <com.facebook.widget.ProfilePictureView
+            android:id="@+id/profile_pic"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:gravity="center_horizontal|left" />
+
+        <TextView
+            android:id="@+id/txt_profile_name"
+            style="@style/smallText"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_horizontal|left"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="#122A0A"
+        android:padding="8dp" />
+
+    <TextView
+        android:id="@+id/txt_home"
+        style="@style/smallText"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="@string/home" />
+
+    <TextView
+        android:id="@+id/txt_upload_image"
+        style="@style/smallText"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="@string/upload_image" />
+
+    <TextView
+        android:id="@+id/txt_invite_friends"
+        style="@style/smallText"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="@string/invite_friends" />
+
+    <TextView
+        android:id="@+id/txt_sign_out"
+        style="@style/smallText"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="@string/signout" />
+    
+        <TextView
+        android:id="@+id/txt_rate_us"
+        style="@style/smallText"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="@string/rate_us" />
+    
+
+</LinearLayout>
