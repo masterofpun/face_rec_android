@@ -52,6 +52,7 @@ public class HomeActivity extends HFBaseActivity implements OnClickListener {
 	private TextView InviteButton;
 	private TextView SignOut;
 	private TextView HomeButton;
+	private TextView RateUsText;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -72,10 +73,12 @@ public class HomeActivity extends HFBaseActivity implements OnClickListener {
 				.findViewById(R.id.txt_invite_friends);
 		HomeButton = (TextView) profileView.findViewById(R.id.txt_home);
 		SignOut = (TextView) profileView.findViewById(R.id.txt_sign_out);
+		RateUsText=(TextView) profileView.findViewById(R.id.txt_rate_us);
 		SignOut.setOnClickListener(this);
 		uploadButton.setOnClickListener(this);
 		InviteButton.setOnClickListener(this);
 		HomeButton.setOnClickListener(this);
+		RateUsText.setOnClickListener(this);
 		mDrawerList.addHeaderView(profileView);
 		makeMeRequest(Session.getActiveSession());
 		getWindow().setSoftInputMode(
@@ -292,6 +295,8 @@ public class HomeActivity extends HFBaseActivity implements OnClickListener {
 			break;
 		case R.id.txt_invite_friends:
 			sendRequestDialog();
+			break;
+		case R.id.txt_rate_us:
 			break;
 		case R.id.txt_upload_image:
 			Intent uploadIntent = new Intent(this, UploadForm.class);

@@ -64,5 +64,14 @@
         android:layout_height="48dp"
         android:gravity="center_vertical"
         android:text="@string/signout" />
+    
+        <TextView
+        android:id="@+id/txt_rate_us"
+        style="@style/smallText"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="@string/rate_us" />
+    
 
 </LinearLayout>

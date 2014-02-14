@@ -165,15 +165,11 @@ public class UploadForm extends HFBaseActivity implements OnClickListener {
 
 				HttpPost httppost = new HttpPost(
 						"http://helpingfaceless.com/api/v1/information/upload");
-
 				MultipartEntity multipartEntity = new MultipartEntity(
 						HttpMultipartMode.BROWSER_COMPATIBLE);
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
 						1);
 				nameValuePairs.add(new BasicNameValuePair("location_attributes", new Gson().toJson(location)));
-				// multipartEntity.addPart("Title", new StringBody("Title"));
-				// multipartEntity.addPart("Nick", new StringBody("Nick"));
-				// multipartEntity.addPart("Email", new StringBody("Email"));
 				multipartEntity.addPart("photo", new FileBody(image));
 				httppost.setEntity(multipartEntity);
 
