@@ -95,7 +95,7 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_setup);
-
+		
 		// Set up the login form.
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);

@@ -34,7 +34,9 @@
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:scaleType="fitXY"
+        android:scaleType="center"
+        android:adjustViewBounds="true"
+   		android:background="#000000"
         android:src="@drawable/background" />
 
     <ScrollView
@@ -45,6 +47,7 @@
         <LinearLayout
             style="@style/LoginFormContainer"
             android:layout_gravity="bottom"
+            android:layout_width="fill_parent"
             android:background="#99000000"
             android:orientation="vertical" >
 
@@ -102,6 +105,7 @@
                 android:id="@+id/btn_fb"
                 style="@style/blue"
                 android:layout_width="fill_parent"
+                android:layout_gravity="center_horizontal"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/facebook_icon"
                 android:drawablePadding="16dp"
