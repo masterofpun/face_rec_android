@@ -232,14 +232,20 @@ public class DashboardFragment extends Fragment implements
 //						Constants.mHostURL
 //								+ task.getmFirstImage().getPhoto_medium_url(),
 //						mImageOne, options, null);
+				String mImageURL=task.getmFirstImage().getPhoto_face_crop_medium_url();
+				if(mImageURL==null)
+					mImageURL=task.getmFirstImage().getPhoto_medium_url();
 				ImageLoader.getInstance().displayImage(
 						Constants.mHostURL
-								+ task.getmFirstImage().getPhoto_medium_url(),
+								+ mImageURL,
 						mThmbOne, options, null);
 //				ImageLoader.getInstance().displayImage(
 //						Constants.mHostURL
 //								+ task.getmSecondImage().getPhoto_medium_url(),
 //						mImageTwo, options, animateFirstListener);
+				mImageURL=task.getmSecondImage().getPhoto_face_crop_medium_url();
+				if(mImageURL==null)
+					mImageURL=task.getmSecondImage().getPhoto_medium_url();
 				ImageLoader.getInstance().displayImage(
 						Constants.mHostURL
 								+ task.getmSecondImage().getPhoto_medium_url(),
