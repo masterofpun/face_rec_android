@@ -1,6 +1,7 @@
 package in.amolgupta.helpingfaceless.activities;
 
 import in.amolgupta.helpingfaceless.R;
+import in.amolgupta.helpingfaceless.utils.LocationRequestData;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +13,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -24,6 +26,7 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
+import com.google.android.gms.location.LocationRequest;
 import com.google.gson.Gson;
 
 import android.app.Activity;
@@ -138,7 +141,7 @@ public class UploadForm extends HFBaseActivity implements OnClickListener {
 	}
 
 	public class UploadTask extends AsyncTask<String, Void, Void> {
-		private DefaultHttpClient mHttpClient;
+		private HttpClient mHttpClient;
 		Uri imageUri;
 		private NotificationManager mNotifyManager;
 		private android.support.v4.app.NotificationCompat.Builder mBuilder;
@@ -169,7 +172,10 @@ public class UploadForm extends HFBaseActivity implements OnClickListener {
 						HttpMultipartMode.BROWSER_COMPATIBLE);
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
 						1);
-				nameValuePairs.add(new BasicNameValuePair("location_attributes", new Gson().toJson(location)));
+				if(location!=null)
+				nameValuePairs.add(new BasicNameValuePair(
+						"location_attributes",
+						new LocationRequestData(location).getRequestString()));
 				multipartEntity.addPart("photo", new FileBody(image));
 				httppost.setEntity(multipartEntity);
 

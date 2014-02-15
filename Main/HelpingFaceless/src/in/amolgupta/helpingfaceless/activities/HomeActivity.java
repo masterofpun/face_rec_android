@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -73,7 +74,7 @@ public class HomeActivity extends HFBaseActivity implements OnClickListener {
 				.findViewById(R.id.txt_invite_friends);
 		HomeButton = (TextView) profileView.findViewById(R.id.txt_home);
 		SignOut = (TextView) profileView.findViewById(R.id.txt_sign_out);
-		RateUsText=(TextView) profileView.findViewById(R.id.txt_rate_us);
+		RateUsText = (TextView) profileView.findViewById(R.id.txt_rate_us);
 		SignOut.setOnClickListener(this);
 		uploadButton.setOnClickListener(this);
 		InviteButton.setOnClickListener(this);
@@ -297,6 +298,12 @@ public class HomeActivity extends HFBaseActivity implements OnClickListener {
 			sendRequestDialog();
 			break;
 		case R.id.txt_rate_us:
+			Intent marketIntent = new Intent(Intent.ACTION_VIEW,
+					Uri.parse("market://details?id=in.amolgupta.helpingfaceless" ));
+			marketIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY
+					| Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET
+					| Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+			startActivity(marketIntent);
 			break;
 		case R.id.txt_upload_image:
 			Intent uploadIntent = new Intent(this, UploadForm.class);
@@ -326,31 +333,31 @@ public class HomeActivity extends HFBaseActivity implements OnClickListener {
 		}
 
 	}
+
 	private void sendRequestDialog() {
-	    Bundle params = new Bundle();
-	    params.putString("message", "Help me find missing people.");
-	    WebDialog requestsDialog = (
-	        new WebDialog.RequestsDialogBuilder(HomeActivity.this,
-	            Session.getActiveSession(),
-	            params))
-	            .setOnCompleteListener(new OnCompleteListener() {
+		Bundle params = new Bundle();
+		params.putString("message", "Help me find missing people.");
+		WebDialog requestsDialog = (new WebDialog.RequestsDialogBuilder(
+				HomeActivity.this, Session.getActiveSession(), params))
+				.setOnCompleteListener(new OnCompleteListener() {
 
-	                @Override
-	                public void onComplete(Bundle values,
-	                    FacebookException error) {
-	                    if (values!=null && values.getString("request") != null) {
-	                        Toast.makeText(HomeActivity.this.getApplicationContext(), 
-	                            "Request sent",  
-	                            Toast.LENGTH_SHORT).show();
-	                    } else {
-	                        Toast.makeText(HomeActivity.this.getApplicationContext(), 
-	                            "Request cancelled", 
-	                            Toast.LENGTH_SHORT).show();
-	                    }
-	                }
+					@Override
+					public void onComplete(Bundle values,
+							FacebookException error) {
+						if (values != null
+								&& values.getString("request") != null) {
+							Toast.makeText(
+									HomeActivity.this.getApplicationContext(),
+									"Request sent", Toast.LENGTH_SHORT).show();
+						} else {
+							Toast.makeText(
+									HomeActivity.this.getApplicationContext(),
+									"Request cancelled", Toast.LENGTH_SHORT)
+									.show();
+						}
+					}
 
-	            })
-	            .build();
-	    requestsDialog.show();
+				}).build();
+		requestsDialog.show();
 	}
 }
