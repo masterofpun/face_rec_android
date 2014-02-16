@@ -311,7 +311,7 @@ public class HomeActivity extends HFBaseActivity implements OnClickListener {
 			break;
 		case R.id.txt_sign_out:
 			Session session = Session.getActiveSession();
-			if (!session.isClosed()) {
+			if (session!=null && !session.isClosed()) {
 				session.closeAndClearTokenInformation();
 			}
 			SharedPreferences pref = getApplicationContext()
@@ -329,7 +329,7 @@ public class HomeActivity extends HFBaseActivity implements OnClickListener {
 			finish();
 			break;
 		default:
-
+			break;
 		}
 
 	}
