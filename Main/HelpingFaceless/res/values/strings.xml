@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">HelpingFaceless</string>
+    <string name="app_name">Helping Faceless</string>
     <string name="action_settings">SETTINGS</string>
     <string name="action_help">SETTINGS</string>
     <string name="action_about">ABOUT US</string>
     <string name="lbl_dash_new">Upload New Picture</string>
-    <string name="lbl_dash_question">Are these picture of the same person?</string>
+    <string name="lbl_dash_question">Are these pictures of the same person?</string>
     <string name="lbl_upload_activity">Upload</string>
     <string name="lbl_btn_upload">UPLOAD</string>
     <string name="lbl_try_again">TRY AGAIN</string>
