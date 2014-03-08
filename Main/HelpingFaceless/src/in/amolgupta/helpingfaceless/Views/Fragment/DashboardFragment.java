@@ -231,10 +231,10 @@ public class DashboardFragment extends Fragment implements
 				// Constants.mHostURL
 				// + task.getmFirstImage().getPhoto_medium_url(),
 				// mImageOne, options, null);
-				String mImageURL = task.getmFirstImage()
-						.getPhoto_face_crop_medium_url();
-				if (mImageURL == null)
-					mImageURL = Constants.mHostURL
+//				String mImageURL = task.getmFirstImage()
+//						.getPhoto_face_crop_medium_url();
+//				if (mImageURL == null)
+				String	mImageURL = Constants.mHostURL
 							+ task.getmFirstImage().getPhoto_medium_url();
 				ImageLoader.getInstance().displayImage(
 
@@ -243,10 +243,10 @@ public class DashboardFragment extends Fragment implements
 				// Constants.mHostURL
 				// + task.getmSecondImage().getPhoto_medium_url(),
 				// mImageTwo, options, animateFirstListener);
-				String mSecondImageURL = task.getmSecondImage()
-						.getPhoto_face_crop_medium_url();
-				if (mSecondImageURL == null)
-					mSecondImageURL = Constants.mHostURL
+//				String mSecondImageURL = task.getmSecondImage()
+//						.getPhoto_face_crop_medium_url();
+//				if (mSecondImageURL == null)
+				String	mSecondImageURL = Constants.mHostURL
 							+ task.getmSecondImage().getPhoto_medium_url();
 				ImageLoader.getInstance().displayImage(mSecondImageURL,
 						mThmbTwo, options, null);
