@@ -34,7 +34,7 @@
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:scaleType="center"
+        android:scaleType = "centerCrop"
         android:adjustViewBounds="true"
    		android:background="#000000"
         android:src="@drawable/background" />
@@ -93,7 +93,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="or" />
+                android:visibility="gone"
+                android:text="@string/or" />
 
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/plus_sign_in_button"
