@@ -37,9 +37,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.LoggingBehavior;
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.Settings;
+import com.facebook.model.GraphUser;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
@@ -52,8 +55,8 @@ import com.squareup.okhttp.OkHttpClient;
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class SetupActivity extends ActionBarActivity implements View.OnClickListener,
-		ConnectionCallbacks, OnConnectionFailedListener {
+public class SetupActivity extends ActionBarActivity implements
+		View.OnClickListener, ConnectionCallbacks, OnConnectionFailedListener {
 	/**
 	 * A dummy authentication store containing known user names and passwords.
 	 * TODO: remove after connecting to a real authentication system.
@@ -70,6 +73,7 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
 	private UserLoginTask mAuthTask = null;
+	private GraphUser user;
 
 	// Values for email and password at the time of the login attempt.
 	private String mEmail;
@@ -95,7 +99,7 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_setup);
-		
+
 		// Set up the login form.
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
@@ -243,7 +247,7 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
-			mAuthTask = new UserLoginTask();
+			mAuthTask = new UserLoginTask(user);
 			mAuthTask.execute((Void) null);
 		}
 	}
@@ -295,19 +299,26 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
 	 */
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		OkHttpClient client = new OkHttpClient();
+		private GraphUser user;
+
+		public UserLoginTask(GraphUser user) {
+			this.user = user;
+		}
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			try {
+				String email = user.asMap().get("email").toString()!=null?user.asMap().get("email").toString():"user@facebook.com";
 				String result = RequestUtils.get(
 						new URL(Uri
 								.parse(Constants.mAuthUrl)
 								.buildUpon()
 								.appendQueryParameter("phone_number",
-										mPasswordView.getText().toString())
-								.appendQueryParameter("email",
-										mEmailView.getText().toString())
-								.build().toString()
+										user.getUsername())
+								.appendQueryParameter(
+										"email",
+										email).build()
+								.toString()
 								+ "%0A"), client);
 				Log.d("HF_API", result);
 			} catch (MalformedURLException e) {
@@ -452,11 +463,13 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
 			editor.commit(); // commit changes
 
 			Constants.mIsLoggedIN = true;
-			Intent mDashBoardIntent = new Intent(SetupActivity.this,
-					HomeActivity.class);
-			startActivity(mDashBoardIntent);
-			finish();
+
+			/* Send user details */
+			makeMeRequest(session);
+
 		
+
+
 		} else {
 			facebookButton.setText("login");
 			facebookButton.setOnClickListener(new OnClickListener() {
@@ -477,8 +490,8 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
 	private void onClickLogin() {
 		Session session = Session.getActiveSession();
 		if (!session.isOpened() && !session.isClosed()) {
-			session.openForRead(new Session.OpenRequest(this)	
-					.setCallback(statusCallback).setPermissions(Arrays.asList("email")));
+			session.openForRead(new Session.OpenRequest(this).setCallback(
+					statusCallback).setPermissions(Arrays.asList("email")));
 		} else {
 			Session.openActiveSession(this, true, statusCallback);
 		}
@@ -514,5 +527,29 @@ public class SetupActivity extends ActionBarActivity implements View.OnClickList
 				Exception exception) {
 			updateView();
 		}
+	}
+
+	private void makeMeRequest(final Session session) {
+		// Make an API call to get user data and define a
+		// new callback to handle the response.
+		Request request = Request.newMeRequest(session,
+				new Request.GraphUserCallback() {
+
+					@Override
+					public void onCompleted(GraphUser user, Response response) {
+						// If the response is successful
+						if (session == Session.getActiveSession()) {
+							if (user != null) {
+								SetupActivity.this.user = user;
+								UserLoginTask task = new UserLoginTask(user);
+								task.execute();
+							}
+						}
+						if (response.getError() != null) {
+							// Handle errors, will do so later.
+						}
+					}
+				});
+		request.executeAsync();
 	}
 }

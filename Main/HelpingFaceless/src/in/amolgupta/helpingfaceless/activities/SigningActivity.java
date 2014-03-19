@@ -27,7 +27,7 @@ public class SigningActivity extends Activity implements ConnectionCallbacks,
 	private PlusClient mPlusClient;
 	private ConnectionResult mConnectionResult;
 	private SignInButton GPlusSigninButton;
-	static final String[] SCOPES = new String[] { Scopes.PLUS_PROFILE,Scopes.APP_STATE,Scopes.PLUS_PROFILE };
+	static final String[] SCOPES = new String[] { Scopes.PLUS_LOGIN,Scopes.APP_STATE };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
