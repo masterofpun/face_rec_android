@@ -105,8 +105,6 @@ public class DashboardFragment extends Fragment implements
 			@Override
 			public void onLoadingFailed(String imageUri, View view,
 					FailReason failReason) {
-				Toast.makeText(DashboardFragment.this.getActivity(),
-						"Unanle to fetch image", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override

@@ -31,4 +31,7 @@
 	<string name="home">Home</string>
 	<string name="rate_us">Rate us</string>
 	<string name="or">or</string>
+	<string name="keen_id">52e8993500111c3053000027</string>
+	<string name="keen_write_key">8310973db94ce495cec9664ba9f31c0f24a94a1864df7d84093e04e330dadd420c18f2bacfc831321cc5bd78009f0dc6f8c1e674b22bee151c26ed202b9481aa3607b446afb3b7e19f204463099cf251ecb504be8c96b92587a635b12a200a8f87b7e8f5b38c4c9121d007435eae09d9</string>
+	<string name="keen_read_key">87ee429fb63d29e263406551a3fc423152db49b866ab6fc9a6978368866ea891afb15557c1f68a9ebd5f0d54672d12bc5d4717ffa7cc522bea7891903553d264eaeb88fb55adb5bf9841d652b09aaf8914304a6bd149793d2dfc7e0227c4d0166b1a79ee25d8eacf9b96d691d8bc4802</string>
 </resources>
