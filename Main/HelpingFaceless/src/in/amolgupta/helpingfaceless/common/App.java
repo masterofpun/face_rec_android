@@ -1,5 +1,8 @@
 package in.amolgupta.helpingfaceless.common;
 
+import in.amolgupta.helpingfaceless.R;
+import in.amolgupta.helpingfaceless.utils.ET;
+
 import java.io.File;
 
 import android.app.Application;
@@ -13,6 +16,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.pushbots.push.Pushbots;
 
 /**
  * @author amol
@@ -47,9 +51,10 @@ public class App extends Application {
 				.defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // default
 				.writeDebugLogs().build();
 		ImageLoader.getInstance().init(config);
-		
-		
+		Pushbots.init(this, getResources().getString(R.string.push_bots_key),
+				getResources().getString(R.string.push_bots_key));
+		ET.trackAppopened();
 
 	}
-	
+
 }

@@ -2,6 +2,7 @@ package in.amolgupta.helpingfaceless.activities;
 
 import in.amolgupta.helpingfaceless.R;
 import in.amolgupta.helpingfaceless.common.Constants;
+import in.amolgupta.helpingfaceless.utils.ET;
 import in.amolgupta.helpingfaceless.utils.RequestUtils;
 
 import java.io.IOException;
@@ -466,7 +467,7 @@ public class SetupActivity extends ActionBarActivity implements
 
 			/* Send user details */
 			makeMeRequest(session);
-
+			ET.trackFaceBookLogin(session.getActiveSession().getAccessToken());
 		
 
 

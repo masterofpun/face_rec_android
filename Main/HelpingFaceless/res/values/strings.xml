@@ -18,20 +18,20 @@
     <string name="title_section3">Section 3</string>
     <string name="title_activity_home">HOME</string>
     <string name="dashboard_label_one">Contribute to fight against human trafficking, help us match the images</string>
-	<string name="app_id">701553546544583</string>
-	<string name="saw_a_lost_child">Saw a lost child?</string>
-	<string name="upload_their_picture_and_we_may_help_them_back_to_their_home">Upload their picture and we may help them back to their home</string>
-	<string name="cant_say">CANT SAY</string>
-	<string name="no">NO</string>
-	<string name="yes">YES</string>
-	<string name="finish">FINISH</string>
-	<string name="upload_image">Upload Image</string>
-	<string name="invite_friends">Invite Friends</string>
-	<string name="signout">Signout</string>
-	<string name="home">Home</string>
-	<string name="rate_us">Rate us</string>
-	<string name="or">or</string>
-	<string name="keen_id">52e8993500111c3053000027</string>
-	<string name="keen_write_key">8310973db94ce495cec9664ba9f31c0f24a94a1864df7d84093e04e330dadd420c18f2bacfc831321cc5bd78009f0dc6f8c1e674b22bee151c26ed202b9481aa3607b446afb3b7e19f204463099cf251ecb504be8c96b92587a635b12a200a8f87b7e8f5b38c4c9121d007435eae09d9</string>
-	<string name="keen_read_key">87ee429fb63d29e263406551a3fc423152db49b866ab6fc9a6978368866ea891afb15557c1f68a9ebd5f0d54672d12bc5d4717ffa7cc522bea7891903553d264eaeb88fb55adb5bf9841d652b09aaf8914304a6bd149793d2dfc7e0227c4d0166b1a79ee25d8eacf9b96d691d8bc4802</string>
+    <string name="app_id">701553546544583</string>
+    <string name="saw_a_lost_child">Saw a lost child?</string>
+    <string name="upload_their_picture_and_we_may_help_them_back_to_their_home">Upload their picture and we may help them back to their home</string>
+    <string name="cant_say">CANT SAY</string>
+    <string name="no">NO</string>
+    <string name="yes">YES</string>
+    <string name="finish">FINISH</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="invite_friends">Invite Friends</string>
+    <string name="signout">Signout</string>
+    <string name="home">Home</string>
+    <string name="rate_us">Rate us</string>
+    <string name="or">or</string>
+    <string name="push_bots_key">AIzaSyAB2AVASez74ypJNuAO9jExql7koOOJab0</string>
+    <string name="push_bots_sender_id">524e6e324deeaed00600368f</string>
+
 </resources>

@@ -8,6 +8,7 @@ import in.amolgupta.helpingfaceless.entities.ImageData;
 import in.amolgupta.helpingfaceless.entities.TaskDetails;
 import in.amolgupta.helpingfaceless.parser.CrowsourceDataParser;
 import in.amolgupta.helpingfaceless.services.SendCSResponse;
+import in.amolgupta.helpingfaceless.utils.ET;
 import in.amolgupta.helpingfaceless.utils.RequestUtils;
 
 import java.io.IOException;
@@ -216,15 +217,14 @@ public class DashboardFragment extends Fragment implements
 		switch (v.getId()) {
 		case R.id.btn_upload:
 			Intent mUploadIntent = new Intent(getActivity(), UploadForm.class);
-			startActivity(mUploadIntent);
-
+			ET.trackUploadClicked();
 			break;
 		case R.id.btn_negitive:
 			new SendCSResponse(task.getId(), "", "negitive").execute();
 			Toast.makeText(getActivity(),
 					"Thank you! Fetching Another set of images",
 					Toast.LENGTH_SHORT).show();
-
+			ET.trackComparison(false);
 			fetchTask.execute();
 			break;
 		case R.id.btn_skip:
@@ -232,6 +232,7 @@ public class DashboardFragment extends Fragment implements
 			Toast.makeText(getActivity(),
 					"Thank you! Fetching Another set of images",
 					Toast.LENGTH_SHORT).show();
+			ET.trackComparison(null);
 			fetchTask.execute();
 			break;
 		case R.id.btn_positive:
@@ -239,6 +240,7 @@ public class DashboardFragment extends Fragment implements
 			Toast.makeText(getActivity(),
 					"Thank you! Fetching Another set of images",
 					Toast.LENGTH_SHORT).show();
+			ET.trackComparison(true);
 			fetchTask.execute();
 			break;
 		case R.id.thmb_cwds_img1:
