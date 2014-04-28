@@ -8,6 +8,7 @@ import in.amolgupta.helpingfaceless.entities.ImageData;
 import in.amolgupta.helpingfaceless.entities.TaskDetails;
 import in.amolgupta.helpingfaceless.parser.CrowsourceDataParser;
 import in.amolgupta.helpingfaceless.services.SendCSResponse;
+import in.amolgupta.helpingfaceless.utils.ET;
 import in.amolgupta.helpingfaceless.utils.RequestUtils;
 
 import java.io.IOException;
@@ -42,10 +43,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
@@ -63,6 +66,8 @@ public class DashboardFragment extends Fragment implements
 	private Animation fadeOutAnimation;
 	private static final int NUM_PAGES = 2;
 	private ViewPager mPager;
+	ProgressBar mProgressOne, mProgressTwo;
+	ImageLoadingListener mListnerOne, mListnerTwo;
 
 	void initializeViews(View fragmentView) {
 		mUploadButton = (Button) fragmentView.findViewById(R.id.btn_upload);
@@ -70,6 +75,10 @@ public class DashboardFragment extends Fragment implements
 		// fragmentView.findViewById(R.id.img_cwds_img1);
 		// mImageTwo = (ImageView)
 		// fragmentView.findViewById(R.id.img_cwds_img2);
+		mProgressOne = (ProgressBar) fragmentView
+				.findViewById(R.id.img_progress_one);
+		mProgressTwo = (ProgressBar) fragmentView
+				.findViewById(R.id.img_progress_two);
 		mThmbOne = (ImageView) fragmentView.findViewById(R.id.thmb_cwds_img1);
 		mThmbTwo = (ImageView) fragmentView.findViewById(R.id.thmb_cwds_img2);
 		mBtnNegitive = (Button) fragmentView.findViewById(R.id.btn_negitive);
@@ -79,12 +88,71 @@ public class DashboardFragment extends Fragment implements
 		mBtnNegitive.setOnClickListener(this);
 		mBtnPositive.setOnClickListener(this);
 		mBtnSkip.setOnClickListener(this);
+
 		fadeInAnimation = AnimationUtils.loadAnimation(getActivity(),
 				R.anim.fade_in);
 		fadeOutAnimation = AnimationUtils.loadAnimation(getActivity(),
 				R.anim.fade_out);
 		mThmbOne.setOnClickListener(this);
 		mThmbTwo.setOnClickListener(this);
+		mListnerOne = new ImageLoadingListener() {
+
+			@Override
+			public void onLoadingStarted(String imageUri, View view) {
+				mThmbOne.setVisibility(View.INVISIBLE);
+				mProgressOne.setVisibility(View.VISIBLE);
+			}
+
+			@Override
+			public void onLoadingFailed(String imageUri, View view,
+					FailReason failReason) {
+			}
+
+			@Override
+			public void onLoadingComplete(String imageUri, View view,
+					Bitmap loadedImage) {
+				mThmbOne.setVisibility(View.VISIBLE);
+				mProgressOne.setVisibility(View.INVISIBLE);
+
+			}
+
+			@Override
+			public void onLoadingCancelled(String imageUri, View view) {
+				Toast.makeText(DashboardFragment.this.getActivity(),
+						"Unanle to fetch image", Toast.LENGTH_SHORT).show();
+			}
+		};
+		
+		mListnerTwo= new ImageLoadingListener() {
+
+			@Override
+			public void onLoadingStarted(String imageUri, View view) {
+				mThmbTwo.setVisibility(View.INVISIBLE);
+				mProgressTwo.setVisibility(View.VISIBLE);
+			}
+
+			@Override
+			public void onLoadingFailed(String imageUri, View view,
+					FailReason failReason) {
+				Toast.makeText(DashboardFragment.this.getActivity(),
+						"Unanle to fetch image", Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void onLoadingComplete(String imageUri, View view,
+					Bitmap loadedImage) {
+				mThmbTwo.setVisibility(View.VISIBLE);
+				mProgressTwo.setVisibility(View.INVISIBLE);
+
+			}
+
+			@Override
+			public void onLoadingCancelled(String imageUri, View view) {
+				Toast.makeText(DashboardFragment.this.getActivity(),
+						"Unanle to fetch image", Toast.LENGTH_SHORT).show();
+			}
+		};
+		
 		// SpringSystem springSystem = SpringSystem.create();
 		//
 		// // Add a spring to the system.
@@ -149,15 +217,14 @@ public class DashboardFragment extends Fragment implements
 		switch (v.getId()) {
 		case R.id.btn_upload:
 			Intent mUploadIntent = new Intent(getActivity(), UploadForm.class);
-			startActivity(mUploadIntent);
-
+			ET.trackUploadClicked();
 			break;
 		case R.id.btn_negitive:
 			new SendCSResponse(task.getId(), "", "negitive").execute();
 			Toast.makeText(getActivity(),
 					"Thank you! Fetching Another set of images",
 					Toast.LENGTH_SHORT).show();
-
+			ET.trackComparison(false);
 			fetchTask.execute();
 			break;
 		case R.id.btn_skip:
@@ -165,6 +232,7 @@ public class DashboardFragment extends Fragment implements
 			Toast.makeText(getActivity(),
 					"Thank you! Fetching Another set of images",
 					Toast.LENGTH_SHORT).show();
+			ET.trackComparison(null);
 			fetchTask.execute();
 			break;
 		case R.id.btn_positive:
@@ -172,6 +240,7 @@ public class DashboardFragment extends Fragment implements
 			Toast.makeText(getActivity(),
 					"Thank you! Fetching Another set of images",
 					Toast.LENGTH_SHORT).show();
+			ET.trackComparison(true);
 			fetchTask.execute();
 			break;
 		case R.id.thmb_cwds_img1:
@@ -197,7 +266,15 @@ public class DashboardFragment extends Fragment implements
 	public class FetchRandomImages extends AsyncTask<Void, Void, Boolean> {
 		OkHttpClient client = new OkHttpClient();
 		private ArrayList<ImageData> images;
+		@Override
+		protected void onPreExecute() {
 
+			mThmbOne.setVisibility(View.INVISIBLE);
+			mThmbTwo.setVisibility(View.INVISIBLE);
+			mProgressOne.setVisibility(View.VISIBLE);
+			mProgressTwo.setVisibility(View.VISIBLE);
+			super.onPreExecute();
+		}
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			try {
@@ -231,25 +308,25 @@ public class DashboardFragment extends Fragment implements
 				// Constants.mHostURL
 				// + task.getmFirstImage().getPhoto_medium_url(),
 				// mImageOne, options, null);
-				String mImageURL = task.getmFirstImage()
-						.getPhoto_face_crop_medium_url();
-				if (mImageURL == null)
-					mImageURL = Constants.mHostURL
-							+ task.getmFirstImage().getPhoto_medium_url();
+				// String mImageURL = task.getmFirstImage()
+				// .getPhoto_face_crop_medium_url();
+				// if (mImageURL == null)
+				String mImageURL = Constants.mHostURL
+						+ task.getmFirstImage().getPhoto_medium_url();
 				ImageLoader.getInstance().displayImage(
 
-				mImageURL, mThmbOne, options, null);
+				mImageURL, mThmbOne, options, mListnerOne);
 				// ImageLoader.getInstance().displayImage(
 				// Constants.mHostURL
 				// + task.getmSecondImage().getPhoto_medium_url(),
 				// mImageTwo, options, animateFirstListener);
-				String mSecondImageURL = task.getmSecondImage()
-						.getPhoto_face_crop_medium_url();
-				if (mSecondImageURL == null)
-					mSecondImageURL = Constants.mHostURL
-							+ task.getmSecondImage().getPhoto_medium_url();
+				// String mSecondImageURL = task.getmSecondImage()
+				// .getPhoto_face_crop_medium_url();
+				// if (mSecondImageURL == null)
+				String mSecondImageURL = Constants.mHostURL
+						+ task.getmSecondImage().getPhoto_medium_url();
 				ImageLoader.getInstance().displayImage(mSecondImageURL,
-						mThmbTwo, options, null);
+						mThmbTwo, options, mListnerTwo);
 				// mImageTwo.startAnimation(fadeInAnimation);
 				// mImageOne.startAnimation(fadeOutAnimation);
 				// mPager.beginFakeDrag();

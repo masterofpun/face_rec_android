@@ -18,17 +18,20 @@
     <string name="title_section3">Section 3</string>
     <string name="title_activity_home">HOME</string>
     <string name="dashboard_label_one">Contribute to fight against human trafficking, help us match the images</string>
-	<string name="app_id">701553546544583</string>
-	<string name="saw_a_lost_child">Saw a lost child?</string>
-	<string name="upload_their_picture_and_we_may_help_them_back_to_their_home">Upload their picture and we may help them back to their home</string>
-	<string name="cant_say">CANT SAY</string>
-	<string name="no">NO</string>
-	<string name="yes">YES</string>
-	<string name="finish">FINISH</string>
-	<string name="upload_image">Upload Image</string>
-	<string name="invite_friends">Invite Friends</string>
-	<string name="signout">Signout</string>
-	<string name="home">Home</string>
-	<string name="rate_us">Rate us</string>
-	<string name="or">or</string>
+    <string name="app_id">701553546544583</string>
+    <string name="saw_a_lost_child">Saw a lost child?</string>
+    <string name="upload_their_picture_and_we_may_help_them_back_to_their_home">Upload their picture and we may help them back to their home</string>
+    <string name="cant_say">CANT SAY</string>
+    <string name="no">NO</string>
+    <string name="yes">YES</string>
+    <string name="finish">FINISH</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="invite_friends">Invite Friends</string>
+    <string name="signout">Signout</string>
+    <string name="home">Home</string>
+    <string name="rate_us">Rate us</string>
+    <string name="or">or</string>
+    <string name="push_bots_key">AIzaSyAB2AVASez74ypJNuAO9jExql7koOOJab0</string>
+    <string name="push_bots_sender_id">524e6e324deeaed00600368f</string>
+
 </resources>

@@ -3,6 +3,7 @@ package in.amolgupta.helpingfaceless.activities;
 import in.amolgupta.helpingfaceless.R;
 import in.amolgupta.helpingfaceless.Views.Fragment.DashboardFragment;
 import in.amolgupta.helpingfaceless.entities.NavItem;
+import in.amolgupta.helpingfaceless.utils.ET;
 
 import java.util.ArrayList;
 
@@ -114,6 +115,7 @@ public class HomeActivity extends HFBaseActivity implements OnClickListener {
 
 			/** Called when a drawer has settled in a completely open state. */
 			public void onDrawerOpened(View drawerView) {
+				ET.trackSidebarClicked();
 			}
 		};
 
@@ -296,6 +298,7 @@ public class HomeActivity extends HFBaseActivity implements OnClickListener {
 			break;
 		case R.id.txt_invite_friends:
 			sendRequestDialog();
+			ET.trackInviteFriends();
 			break;
 		case R.id.txt_rate_us:
 			Intent marketIntent = new Intent(Intent.ACTION_VIEW,
@@ -304,8 +307,10 @@ public class HomeActivity extends HFBaseActivity implements OnClickListener {
 					| Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET
 					| Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 			startActivity(marketIntent);
+			ET.trackRatingClicked();
 			break;
 		case R.id.txt_upload_image:
+			ET.trackUploadClicked();
 			Intent uploadIntent = new Intent(this, UploadForm.class);
 			startActivity(uploadIntent);
 			break;

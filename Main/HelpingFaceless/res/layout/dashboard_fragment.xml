@@ -7,8 +7,8 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:focusableInTouchMode="true"
         android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
         android:orientation="vertical" >
 
         <TextView
@@ -38,19 +38,44 @@
                     android:orientation="horizontal"
                     android:weightSum="1" >
 
-                    <ImageView
-                        android:id="@+id/thmb_cwds_img1"
+                    <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:layout_weight=".5"
-                        android:scaleType="fitXY" />
+                        android:layout_weight=".5" >
 
-                    <ImageView
-                        android:id="@+id/thmb_cwds_img2"
+                        <ImageView
+                            android:id="@+id/thmb_cwds_img1"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:scaleType="fitXY" />
+
+                        <ProgressBar
+                            android:id="@+id/img_progress_one"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|center_horizontal"
+                            android:visibility="invisible" />
+                    </FrameLayout>
+
+                    <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:layout_weight=".5"
-                        android:scaleType="fitXY" />
+                        android:layout_weight=".5" >
+
+                        <ImageView
+                            android:id="@+id/thmb_cwds_img2"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:scaleType="fitXY"
+                             />
+
+                        <ProgressBar
+                            android:id="@+id/img_progress_two"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|center_horizontal"
+                            android:visibility="invisible" />
+                    </FrameLayout>
                 </LinearLayout>
 
                 <TextView
