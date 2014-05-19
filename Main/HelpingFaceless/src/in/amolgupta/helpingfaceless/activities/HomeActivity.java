@@ -39,6 +39,7 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.ProfilePictureView;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
+import com.helpshift.Helpshift;
 
 public class HomeActivity extends HFBaseActivity implements OnClickListener {
 
@@ -55,6 +56,7 @@ public class HomeActivity extends HFBaseActivity implements OnClickListener {
 	private TextView SignOut;
 	private TextView HomeButton;
 	private TextView RateUsText;
+	private TextView mMessages;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -75,12 +77,21 @@ public class HomeActivity extends HFBaseActivity implements OnClickListener {
 				.findViewById(R.id.txt_invite_friends);
 		HomeButton = (TextView) profileView.findViewById(R.id.txt_home);
 		SignOut = (TextView) profileView.findViewById(R.id.txt_sign_out);
+		mMessages=(TextView) profileView.findViewById(R.id.txt_messages);
 		RateUsText = (TextView) profileView.findViewById(R.id.txt_rate_us);
 		SignOut.setOnClickListener(this);
 		uploadButton.setOnClickListener(this);
 		InviteButton.setOnClickListener(this);
 		HomeButton.setOnClickListener(this);
 		RateUsText.setOnClickListener(this);
+		mMessages.setOnClickListener(new OnClickListener() {
+		    @Override
+		    public void onClick(View view) {
+		         Helpshift.showConversation(HomeActivity
+		        		 .this);
+		         // Where MyActivity.this is the Activity you're calling Helpshift from
+		    }
+		});
 		mDrawerList.addHeaderView(profileView);
 		makeMeRequest(Session.getActiveSession());
 		getWindow().setSoftInputMode(

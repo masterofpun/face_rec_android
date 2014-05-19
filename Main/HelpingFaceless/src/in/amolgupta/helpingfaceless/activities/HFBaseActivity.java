@@ -1,6 +1,7 @@
 package in.amolgupta.helpingfaceless.activities;
 
 import in.amolgupta.helpingfaceless.BuildConfig;
+import in.amolgupta.helpingfaceless.R;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
@@ -19,7 +20,8 @@ public class HFBaseActivity extends ActionBarActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		FlurryAgent.onStartSession(this, "YOUR_API_KEY");
+		FlurryAgent.onStartSession(this, getResources().getString(R.string.flurry_key));
+
 	}
 
 	@Override

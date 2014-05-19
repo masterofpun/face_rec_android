@@ -1,6 +1,5 @@
 package in.amolgupta.helpingfaceless.common;
 
-import in.amolgupta.helpingfaceless.R;
 import in.amolgupta.helpingfaceless.utils.ET;
 
 import java.io.File;
@@ -8,6 +7,7 @@ import java.io.File;
 import android.app.Application;
 import android.graphics.Bitmap.CompressFormat;
 
+import com.helpshift.Helpshift;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -16,7 +16,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.StorageUtils;
-import com.pushbots.push.Pushbots;
 
 /**
  * @author amol
@@ -51,9 +50,17 @@ public class App extends Application {
 				.defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // default
 				.writeDebugLogs().build();
 		ImageLoader.getInstance().init(config);
-		Pushbots.init(this, getResources().getString(R.string.push_bots_key),
-				getResources().getString(R.string.push_bots_key));
+//		Pushbots.init(this, getResources().getString(R.string.push_bots_key),
+//				getResources().getString(R.string.push_bots_key));
+		
+		Helpshift.install(this,
+                "de66bee61e1b472923ff949cb964ec9d", // API Key
+                "helpingfaceless.helpshift.com", // Domain Name
+                "helpingfaceless_platform_20140518124454617-20930bb94600808");
+		
+		
 		ET.trackAppopened();
+		
 
 	}
 

@@ -26,12 +26,14 @@
     <string name="yes">YES</string>
     <string name="finish">FINISH</string>
     <string name="upload_image">Upload Image</string>
+    <string name="messages">Messages</string>
     <string name="invite_friends">Invite Friends</string>
     <string name="signout">Signout</string>
     <string name="home">Home</string>
     <string name="rate_us">Rate us</string>
     <string name="or">or</string>
-    <string name="push_bots_key">AIzaSyAB2AVASez74ypJNuAO9jExql7koOOJab0</string>
-    <string name="push_bots_sender_id">524e6e324deeaed00600368f</string>
+    <string name="push_bots_key">AIzaSyBbJdhuw8XhrZgF_QNHy6zMr-ywt5S_SMU</string>
+    <string name="push_bots_sender_id">85673844081</string>
+    <string name="flurry_key">4Z34KMWPQG47V3VQJH5X</string>
 
 </resources>
